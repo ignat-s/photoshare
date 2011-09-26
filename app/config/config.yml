@@ -1,0 +1,75 @@
+imports:
+  - { resource: parameters.ini }
+  - { resource: security.yml }
+
+framework:
+  #esi:             ~
+  #translator:      { fallback: %locale% }
+  secret:          %secret%
+  charset:         UTF-8
+  router:          { resource: "%kernel.root_dir%/config/routing.yml" }
+  form:            true
+  csrf_protection: true
+  validation:      { enable_annotations: true }
+  templating:      { engines: ['twig', 'php'] } #assets_version: SomeVersionScheme
+  session:
+    default_locale: %locale%
+    lifetime:       3600
+    auto_start:     true
+
+# Twig Configuration
+twig:
+  debug:            %kernel.debug%
+  strict_variables: %kernel.debug%
+
+# Assetic Configuration
+assetic:
+  debug:          %kernel.debug%
+  use_controller: false
+  filters:
+    cssrewrite: ~
+    # closure:
+    #     jar: %kernel.root_dir%/java/compiler.jar
+    # yui_css:
+    #     jar: %kernel.root_dir%/java/yuicompressor-2.4.2.jar
+
+# Doctrine Configuration
+doctrine:
+  dbal:
+    connections:
+      default:
+        driver:   %emp_database_driver%
+        host:     %emp_database_host%
+        dbname:   %emp_database_name%
+        port:     %emp_database_port%
+        user:     %emp_database_user%
+        password: %emp_database_password%
+
+  orm:
+    auto_generate_proxy_classes: %kernel.debug%
+    entity_managers:
+      default:
+        connection: default
+        auto_mapping: true
+        mappings:
+          StofDoctrineExtensionsBundle: false
+
+
+stof_doctrine_extensions:
+  default_locale: en_US
+  orm:
+    default:
+      timestampable: true
+        
+# Swiftmailer Configuration
+swiftmailer:
+  transport:  sendmail
+
+jms_security_extra:
+  secure_controllers:  true
+  secure_all_services: false
+
+knp_menu:
+  twig: true
+
+# phosh: ~

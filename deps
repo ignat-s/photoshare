@@ -1,0 +1,95 @@
+[symfony]
+    git=http://github.com/symfony/symfony.git
+    version=v2.0.3
+    target=/vendor/symfony
+
+[twig]
+    git=http://github.com/fabpot/Twig.git
+    version=v1.1.2
+    target=/vendor/twig
+
+[monolog]
+    git=http://github.com/Seldaek/monolog.git
+    version=1.0.1
+    target=/vendor/monolog
+
+[doctrine-common]
+    git=http://github.com/doctrine/common.git
+    version=2.1.1
+    target=/vendor/doctrine-common
+
+[doctrine-dbal]
+    git=http://github.com/doctrine/dbal.git
+    version=2.1.2
+    target=/vendor/doctrine-dbal
+
+[doctrine]
+    git=http://github.com/doctrine/doctrine2.git
+    version=2.1.1
+    target=/vendor/doctrine
+
+[swiftmailer]
+    git=http://github.com/swiftmailer/swiftmailer.git
+    version=v4.1.2
+    target=/vendor/swiftmailer
+
+[assetic]
+    git=http://github.com/kriswallsmith/assetic.git
+    version=v1.0.2
+    target=/vendor/assetic
+
+[twig-extensions]
+    git=http://github.com/fabpot/Twig-extensions.git
+    target=/vendor/twig-extensions
+
+[metadata]
+    git=http://github.com/schmittjoh/metadata.git
+    version=1.0.0
+    target=/vendor/metadata
+
+[SensioFrameworkExtraBundle]
+    git=http://github.com/sensio/SensioFrameworkExtraBundle.git
+    target=/vendor/bundles/Sensio/Bundle/FrameworkExtraBundle
+
+[JMSSecurityExtraBundle]
+    git=http://github.com/schmittjoh/JMSSecurityExtraBundle.git
+    target=/vendor/bundles/JMS/SecurityExtraBundle
+    version=origin/1.0.x
+
+[SensioDistributionBundle]
+    git=http://github.com/sensio/SensioDistributionBundle.git
+    target=/vendor/bundles/Sensio/Bundle/DistributionBundle
+    version=origin/1.0
+
+[SensioGeneratorBundle]
+    git=http://github.com/sensio/SensioGeneratorBundle.git
+    target=/vendor/bundles/Sensio/Bundle/GeneratorBundle
+
+[AsseticBundle]
+    git=http://github.com/symfony/AsseticBundle.git
+    target=/vendor/bundles/Symfony/Bundle/AsseticBundle
+    version=v1.0.1
+
+
+
+
+
+[KnpMenuBundle]
+    git=https://github.com/knplabs/KnpMenuBundle.git
+    target=/vendor/bundles/Knp/Bundle/MenuBundle
+
+[KnpMenu]
+    git=https://github.com/knplabs/KnpMenu.git
+    target=/vendor/knpmenu
+
+[FOSUserBundle]
+    git=git://github.com/FriendsOfSymfony/FOSUserBundle.git
+    target=/vendor/bundles/FOS/UserBundle
+
+[gedmo-doctrine-extensions]
+    git=http://github.com/l3pp4rd/DoctrineExtensions.git
+    target=/vendor/gedmo-doctrine-extensions
+
+[StofDoctrineExtensionsBundle]
+    git=http://github.com/stof/StofDoctrineExtensionsBundle.git
+    target=/vendor/bundles/Stof/DoctrineExtensionsBundle

@@ -1,0 +1,44 @@
+security:
+  encoders:
+    Symfony\Component\Security\Core\User\User: plaintext
+    Emp\MarketBundle\Entity\User: sha1
+
+  role_hierarchy:
+    ROLE_ADMIN: ROLE_USER
+    ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+  providers:
+    in_memory:
+      users:
+        user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+        admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+    #doctrine:
+    #  name: entity
+    #  entity: { class: PhoshBundle:User }
+
+  firewalls:
+    dev:
+      pattern:  ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    main:
+      pattern:    ^/.*
+      anonymous: ~
+      http_basic:
+        #provider:
+        provider: in_memory
+      form_login:
+        #provider: entity
+        provider: in_memory
+      logout:
+        invalidate_session: true
+      remember_me:
+        key:  iadkfia~!~304-0ieefdsgdsg%%(@_(!@(13ddaadsdsaads;kwd!@@$!?093808903212dd
+        lifetime: 86400 # in seconds
+
+  access_control:
+    - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/.*$, roles: ROLE_USER }
+    #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+    #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }

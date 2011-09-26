@@ -1,0 +1,25 @@
+imports:
+  - { resource: config_dev.yml }
+
+framework:
+  test: ~
+  session:
+    storage_id: session.storage.filesystem
+
+web_profiler:
+  toolbar: false
+  intercept_redirects: false
+
+doctrine:
+  dbal:
+    connections:
+      default:
+        driver: pdo_sqlite
+        path: %kernel.cache_dir%/tests.sqlite
+
+swiftmailer:
+    disable_delivery: true
+
+services:
+  session.storage.array:
+    class: Symfony\Component\HttpFoundation\SessionStorage\ArraySessionStorage
