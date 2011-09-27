@@ -3,13 +3,13 @@
 #   resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
 #   prefix:   /_internal
 
-market_bundle:
-  resource: "@EmpMarketBundle/Controller"
+phoshmainbundle:
+  resource: "@PhoshMainBundle/Controller"
   type:     annotation
 
 login:
   pattern:   /login
-  defaults:  { _controller: EmpMarketBundle:Security:login }
+  defaults:  { _controller: PhoshMainBundle:Security:login }
 
 logout:
   pattern:   /logout

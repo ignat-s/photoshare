@@ -1,0 +1,53 @@
+{% extends '::base.html.twig' %}
+
+{% set page_title = 'Posts' %}
+{% set page_secondary_title = 'Administration' %}
+{% set breadcrumbs = [{ 'name': 'Posts', 'path': path('post_index') }] %}
+{% set route = app.request.get('_route') %}
+
+{% if post is defined %}
+    {% set breadcrumbs = breadcrumbs|merge([{ 'name': post.title, 'path': path('post_show', { 'id' : post.id }) }]) %}
+{% endif %}
+
+{% if route == 'post_create' %}
+    {% set page_title = 'Add post' %}
+{% elseif route == 'post_edit' %}
+    {% set page_title = 'Edit post'  %}
+{% elseif route == 'post_delete' %}
+    {% set page_title = 'Delete post' %}
+{% elseif route == 'post_show' %}
+    {% set page_title = post.title %}
+{% endif %}
+
+{% if route not in ['post_index', 'post_show'] %}
+    {% set breadcrumbs = breadcrumbs|merge([{ 'name': page_title, 'path': app.request.basePath }]) %}
+{% endif %}
+
+{% block page_actions %}
+    <div class="page-actions">
+    {% if is_granted('ROLE_ADMIN') %}
+        <a class="button" href="{{ path('post_index') }}">Список</a>
+        <a class="button" href="{{ path('post_create') }}">Добавить</a>
+        {% if post is defined %}
+            <a class="button" href="{{ path('post_show', {'id': post.id }) }}">Просмотреть</a>
+            <a class="button" href="{{ path('post_edit', {'id': post.id }) }}">Редактировать</a>
+            <a class="button" href="{{ path('post_delete', {'id': post.id }) }}">Удалить</a>
+        {% endif %}
+    {% endif %}
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    <ul class="tabs">
+        <li {% if route == 'post_index'  %}class="active"{% endif %}><a href="{{ path('post_index') }}">List</a></li>
+        <li {% if route == 'post_create' %}class="active"{% endif %}><a href="{{ path('post_create') }}">Add</a></li>
+        {% if post is defined %}
+            <li {% if route == 'post_show'   %}class="active"{% endif %}><a href="{{ path('post_show', {'id': post.id}) }}">Show</a></li>
+            <li {% if route == 'post_edit'   %}class="active"{% endif %}><a href="{{ path('post_edit', {'id': post.id}) }}">Edit</a></li>
+            <li {% if route == 'post_delete' %}class="active"{% endif %}><a href="{{ path('post_delete', {'id': post.id}) }}">Delete</a></li>
+        {% endif %}
+    </ul>
+    <div style="font-size: 2px;">&nbsp;</div>
+    {% block content_inner %}{% endblock %}
+{% endblock %}

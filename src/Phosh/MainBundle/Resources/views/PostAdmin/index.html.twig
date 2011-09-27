@@ -1,0 +1,32 @@
+{% extends 'PhoshMainBundle:PostAdmin:layout.html.twig' %}
+
+{% set breadcrumbs = [{ 'name': 'Posts', 'path': path('post_index') }] %}
+
+{% block content_inner %}
+
+    {% if posts|length %}
+        <table class="zebra-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>URL</th>
+                </tr>
+            </thead>
+            {% for post in posts %}
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td><a href="{{ path('post_show', {'id': post.id}) }}">{{ post.title }}</a></td>
+                    <td>
+                        <a href="post{{ post.token }}.html">http://photoshare.ignat.local/post{{ post.token }}.html</a>
+                        {% if post.expired %}<span class="label important">expired</span>{% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No posts found</p>
+    {% endif %}
+
+
+{% endblock %}

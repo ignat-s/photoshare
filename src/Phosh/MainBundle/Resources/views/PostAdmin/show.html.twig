@@ -1,0 +1,26 @@
+{% extends 'PhoshMainBundle:PostAdmin:layout.html.twig' %}
+
+{% block content_inner %}
+
+    <div class="alert-message block-message info">
+        <p>
+            <ul>
+                <li>Created by <strong>{{ post.owner }}</strong> at <strong>{{ post.createdAt|date("Y/m/d H:i:s") }}</strong></li>
+                {% if post.updatedAt %}
+                    <li>Updated at <strong>{{ post.createdAt|date("Y/m/d H:i:s") }}</strong></li>
+                {% endif %}
+                {% if post.expired %}
+                    <li>Expired at <strong>{{ post.expiredAt|date("Y/m/d H:i:s") }}</strong></li>
+                {% else %}
+                    <li>Will expire at <strong>{{ post.expiredAt|date("Y/m/d H:i:s") }}</strong></li>
+                {% endif %}
+            </ul>
+        </p>
+    </div>
+
+
+
+    {{ post.body }}
+    
+
+{% endblock %}

@@ -12,19 +12,19 @@
          bootstrap="./tests/bootstrap.php">
     <testsuites>
         <testsuite name="Photoshare Test Suite">
-            <directory>./tests/Photoshare/</directory>
-            <directory>./src/Photoshare/</directory>
+            <directory>./tests/</directory>
+            <directory>./src/Phosh/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./src/Photoshare/</directory>
+            <directory>./src/Phosh/</directory>
             <exclude>
-                    <directory suffix=".html.php">./src/Photoshare</directory>
-		            <directory suffix="Interface.php">./src/Photoshare</directory>
-		            <directory>./src/Photoshare/*/Resources</directory>
-		            <directory>./src/Photoshare/*/Tests</directory>
+                    <directory suffix=".html.php">./src/Phosh</directory>
+		            <directory suffix="Interface.php">./src/Phosh</directory>
+		            <directory>./src/Phosh/*/Resources</directory>
+		            <directory>./src/Phosh/*/Tests</directory>
 		        </exclude>
         </whitelist>
     </filter>

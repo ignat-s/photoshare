@@ -1,3 +1,5 @@
 vendor
 web/bundles
 .idea
+tests/coverage
+photostorage/*

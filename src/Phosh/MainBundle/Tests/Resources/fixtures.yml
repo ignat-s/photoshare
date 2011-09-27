@@ -1,0 +1,7 @@
+Phosh\MainBundle\Entity\Post:
+  samplePost:
+    properties:
+      title: Test post
+      body: Some text
+      owner: admin
+      expiredAt: @datetime("", "+1 day")

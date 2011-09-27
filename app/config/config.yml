@@ -38,12 +38,12 @@ doctrine:
   dbal:
     connections:
       default:
-        driver:   %emp_database_driver%
-        host:     %emp_database_host%
-        dbname:   %emp_database_name%
-        port:     %emp_database_port%
-        user:     %emp_database_user%
-        password: %emp_database_password%
+        driver:   %database_driver%
+        host:     %database_host%
+        dbname:   %database_name%
+        port:     %database_port%
+        user:     %database_user%
+        password: %database_password%
 
   orm:
     auto_generate_proxy_classes: %kernel.debug%

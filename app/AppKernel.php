@@ -21,7 +21,7 @@ class AppKernel extends Kernel
 
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
 
-            new Phosh\PhoshBundle\PhoshBundle(),
+            new Phosh\MainBundle\PhoshMainBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
