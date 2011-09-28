@@ -18,8 +18,8 @@
                     <td>{{ post.id }}</td>
                     <td><a href="{{ path('post_show', {'id': post.id}) }}">{{ post.title }}</a></td>
                     <td>
-                        <a href="post{{ post.token }}.html">http://photoshare.ignat.local/post{{ post.token }}.html</a>
-                        {% if post.expired %}<span class="label important">expired</span>{% endif %}
+                        {% if post.expired %}<span class="label important">expired</span>{% else %}<span class="label success">active</span>{% endif %}
+                        <a href="{{ path('post_show_by_token', { 'token': post.token }) }}">{{ url('post_show_by_token', { 'token': post.token }) }}</a>
                     </td>
                 </tr>
             {% endfor %}

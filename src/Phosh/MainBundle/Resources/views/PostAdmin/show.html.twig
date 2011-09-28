@@ -2,20 +2,20 @@
 
 {% block content_inner %}
 
+    {% if post.expired %}<span class="label important">expired</span>{% else %}<span class="label success">active</span>{% endif %}
+    <a href="{{ path('post_show_by_token', { 'token': post.token }) }}">{{ url('post_show_by_token', { 'token': post.token }) }}</a>
     <div class="alert-message block-message info">
-        <p>
-            <ul>
-                <li>Created by <strong>{{ post.owner }}</strong> at <strong>{{ post.createdAt|date("Y/m/d H:i:s") }}</strong></li>
-                {% if post.updatedAt %}
-                    <li>Updated at <strong>{{ post.createdAt|date("Y/m/d H:i:s") }}</strong></li>
-                {% endif %}
-                {% if post.expired %}
-                    <li>Expired at <strong>{{ post.expiredAt|date("Y/m/d H:i:s") }}</strong></li>
-                {% else %}
-                    <li>Will expire at <strong>{{ post.expiredAt|date("Y/m/d H:i:s") }}</strong></li>
-                {% endif %}
-            </ul>
-        </p>
+        <ul>
+            <li>Created by <strong>{{ post.owner }}</strong> at <strong>{{ post.createdAt|date("Y/m/d H:i:s") }}</strong></li>
+            {% if post.updatedAt %}
+                <li>Updated at <strong>{{ post.createdAt|date("Y/m/d H:i:s") }}</strong></li>
+            {% endif %}
+            {% if post.expired %}
+                <li>Expired at <strong>{{ post.expiredAt|date("Y/m/d H:i:s") }}</strong></li>
+            {% else %}
+                <li>Will expire at <strong>{{ post.expiredAt|date("Y/m/d H:i:s") }}</strong></li>
+            {% endif %}
+        </ul>
     </div>
 
 

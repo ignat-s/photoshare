@@ -1,0 +1,9 @@
+{% extends '::base.html.twig' %}
+
+{% set breadcrumbs = [{ 'name': post.title, 'path': path('post_show_by_token', {'token': post.token}) }] %}
+
+{% block page_header %}<h1>{{ post.title }}</h1>{% endblock %}
+
+{% block content %}
+    {{ post.body }}
+{% endblock %}

@@ -3,26 +3,30 @@
 {% block content_inner %}
 
     <form action="{{ path('post_create') }}" method="post">
+        {{ form_errors(form) }}
         <fieldset>
-            <div class="clearfix">
+            <div class="clearfix {% if form.title.get('errors')|length %}error{% endif %}">
                 {{ form_label(form.title) }}
                 <div class="input">
-                    {{ form_widget(form.title, { 'attr' : {'class' : 'span12'} }) }}
+                    {{ form_widget(form.title, { 'attr' : {'class' : 'xlarge'} }) }}
+                    {{ form_errors(form.title) }}
                 </div>
             </div>
 
-            <div class="clearfix">
+            <div class="clearfix {% if form.body.get('errors')|length %}error{% endif %}">
                 {{ form_label(form.body) }}
                 <div class="input">
                     {{ form_widget(form.body, { 'attr' : {'class' : 'span12', 'style' : 'height: 200px;' } }) }}
+                    {{ form_errors(form.body) }}
                 </div>
             </div>
 
-            <div class="clearfix">
+            <div class="clearfix {% if form.expiredAt.get('errors')|length %}error{% endif %}">
                 {{ form_label(form.expiredAt) }}
                 <div class="input">
                     {{ form_widget(form.expiredAt.date, { 'attr' : {'placeholder' : 'YYYY/MM/DD' } }) }}
                     {{ form_widget(form.expiredAt.time, { 'attr' : {'placeholder' : 'HH:MM:SS' } }) }}
+                    {{ form_errors(form.expiredAt) }}
                 </div>
             </div>
 

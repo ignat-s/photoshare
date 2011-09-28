@@ -63,8 +63,6 @@ class PostTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($this->post->getToken());
         $this->post->setToken($token = 'SomeToken');
         $this->assertEquals($token, $this->post->getToken());
-        $this->post->setRandomToken();
-        $this->assertNotEquals($token, $this->post->getToken());
     }
 
     public function testExpiredAtWorks()

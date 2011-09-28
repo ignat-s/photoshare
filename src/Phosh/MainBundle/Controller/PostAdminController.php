@@ -53,7 +53,7 @@ class PostAdminController extends BaseController
     {
         $post = new Post();
         $post->setOwner($this->getCurrentUser()->getUsername());
-        $form = $this->createForm(new PostType(), $post);
+        $form = $this->createForm(new PostType(PostType::CREATE_TYPE), $post);
 
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
@@ -81,7 +81,7 @@ class PostAdminController extends BaseController
      */
     public function editAction(Post $post)
     {
-        $form = $this->createForm(new PostType(), $post);
+        $form = $this->createForm(new PostType(PostType::EDIT_TYPE), $post);
 
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
@@ -109,6 +109,15 @@ class PostAdminController extends BaseController
      */
     public function deleteAction(Post $post)
     {
-        return array();
+        try {
+            $this->getEntityManager()->remove($post);
+            $this->getEntityManager()->flush();
+
+            $this->get('session')->setFlash('success', 'Post deleted');
+            return $this->redirect($this->generateUrl('post_index'));
+        } catch (\PDOException $e) {
+            $this->get('session')->setFlash('error', $e->getMessage());
+            return $this->redirect($this->generateUrl('post_show', array('id' => $post->getId())));
+        }
     }
 }

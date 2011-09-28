@@ -1,0 +1,10 @@
+Phosh\MainBundle\Entity\Post:
+  properties:
+    title:
+      - NotBlank: ~
+      - MinLength: 3
+      - MaxLength: 255
+    body:
+      - NotBlank: ~
+    expiredAt:
+      - NotBlank: ~

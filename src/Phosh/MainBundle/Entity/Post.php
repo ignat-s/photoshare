@@ -14,11 +14,12 @@ class Post
     private $createdAt;
     private $expiredAt;
     private $updatedAt;
+    private $regenerateToken = false;
 
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->setRandomToken();
+        $this->setToken($this->generateToken());
     }
 
     public function setId($id)
@@ -76,6 +77,11 @@ class Post
         $this->owner = $owner;
     }
 
+    public function isTest()
+    {
+        return false;
+    }
+
     public function getOwner()
     {
         return $this->owner;
@@ -86,19 +92,31 @@ class Post
         $this->token = $token;
     }
 
-    public function setRandomToken()
-    {
-        $this->setToken($this->generateToken());
-    }
-
     public function getToken()
     {
         return $this->token;
     }
 
+    public function setRegenerateToken($regenerateToken)
+    {
+        $this->regenerateToken = $regenerateToken;
+    }
+
+    public function isRegenerateToken()
+    {
+        return $this->regenerateToken;
+    }
+
     public function setExpiredAt(\DateTime $expiredAt)
     {
         $this->expiredAt = $expiredAt;
+    }
+
+    public function preUpdate()
+    {
+        if ($this->isRegenerateToken()) {
+            $this->token = $this->generateToken();
+        }
     }
 
     public function getExpiredAt()

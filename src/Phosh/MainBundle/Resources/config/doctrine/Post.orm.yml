@@ -41,3 +41,6 @@ Phosh\MainBundle\Entity\Post:
       column: expired_at
       type: datetime
       nullable: true
+
+  lifecycleCallbacks:
+    preUpdate: [ preUpdate ]

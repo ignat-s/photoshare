@@ -70,6 +70,10 @@
         }
     </style>
     {% block stylesheets %}{% endblock %}
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script type="text/javascript" src="http://twitter.github.com/bootstrap/1.3.0/bootstrap-modal.js"></script>
+    <script type="text/javascript" src="http://twitter.github.com/bootstrap/1.3.0/bootstrap-alerts.js"></script>
     {% block scripts %}{% endblock %}
 </head>
 <body>
@@ -136,25 +140,29 @@
             {% endif %}
 
             {% if app.session.hasFlash('warning') %}
-                <div class="alert-message warning">
+                <div class="alert-message warning fade in" data-alert="alert">
+                    <a class="close" href="#">×</a>
                     {{ app.session.flash('warning') }}
                 </div>
             {% endif %}
 
             {% if app.session.hasFlash('error') %}
-                <div class="alert-message error">
+                <div class="alert-message error fade in" data-alert="alert">
+                    <a class="close" href="#">×</a>
                     {{ app.session.flash('error') }}
                 </div>
             {% endif %}
 
             {% if app.session.hasFlash('success') %}
-                <div class="alert-message success">
+                <div class="alert-message success fade in" data-alert="alert">
+                    <a class="close" href="#">×</a>
                     {{ app.session.flash('success') }}
                 </div>
             {% endif %}
 
             {% if app.session.hasFlash('info') %}
-                <div class="alert-message info">
+                <div class="alert-message info fade in" data-alert="alert">
+                    <a class="close" href="#">×</a>
                     {{ app.session.flash('info') }}
                 </div>
             {% endif %}
