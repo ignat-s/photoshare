@@ -8,14 +8,6 @@ use Phosh\MainBundle\Entity\Post;
 
 class PostType extends AbstractType
 {
-    const CREATE_TYPE = 'CREATE_TYPE';
-    const EDIT_TYPE = 'EDIT_TYPE';
-
-    public function __construct($type)
-    {
-        $this->type = $type;
-    }
-
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('title', 'text', array('label' => 'Title'))
@@ -27,16 +19,14 @@ class PostType extends AbstractType
                         'time_widget' => 'single_text',
                         'date_format' => 'Y/MM/d',
                     ));
-        
-        if (self::EDIT_TYPE == $this->type) {
-                $builder->add('token', 'text', array(
-                            'label' => 'Token',
-                            'read_only' => true,
-                        ))->add('regenerateToken', 'checkbox', array(
-                            'label' => 'Regenerate token',
-                            'required' => false,
-                        ));
-        }
+
+        $builder->add('token', 'text', array(
+            'label' => 'Token',
+            'read_only' => true,
+        ))->add('regenerateToken', 'checkbox', array(
+            'label' => 'Regenerate token',
+            'required' => false,
+        ));
     }
 
     public function getName()

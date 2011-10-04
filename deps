@@ -93,3 +93,8 @@
 [StofDoctrineExtensionsBundle]
     git=http://github.com/stof/StofDoctrineExtensionsBundle.git
     target=/vendor/bundles/Stof/DoctrineExtensionsBundle
+
+[imagine]
+    git=http://github.com/avalanche123/Imagine.git
+    version=v0.1.5
+    target=/vendor/imagine

@@ -74,4 +74,6 @@ jms_security_extra:
 knp_menu:
   twig: true
 
-# phosh: ~
+phosh_main:
+  storage_dir: %kernel.root_dir%/../photostorage
+  thumbs_dir: %kernel.cache_dir%/thumbs

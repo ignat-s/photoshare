@@ -67,6 +67,20 @@ class BaseController extends Controller
         }
     }
 
+    protected function assertTrue($subject, $errorMessage = null, $errorCode = 404)
+    {
+        if (true != $subject) {
+            $this->fail($errorMessage, $errorCode);
+        }
+    }
+
+    protected function assertFalse($subject, $errorMessage = null, $errorCode = 404)
+    {
+        if (false != $subject) {
+            $this->fail($errorMessage, $errorCode);
+        }
+    }
+
     protected function fail($errorMessage = null, $errorCode = 404)
     {
         throw new HttpException($errorCode, $errorMessage);

@@ -47,13 +47,12 @@ class PostAdminController extends BaseController
 
     /**
      * @Route("/create", name="post_create", requirements={"id" = "\d+"})
-     * @Template()
      */
     public function createAction()
     {
         $post = new Post();
         $post->setOwner($this->getCurrentUser()->getUsername());
-        $form = $this->createForm(new PostType(PostType::CREATE_TYPE), $post);
+        $form = $this->createForm(new PostType(), $post);
 
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
@@ -69,9 +68,10 @@ class PostAdminController extends BaseController
             }
         }
 
-        return array(
+        return $this->render('PhoshMainBundle:PostAdmin:form.html.twig', array(
+            'post' => $post,
             'form' => $form->createView(),
-        );
+        ));
     }
 
     /**
@@ -81,7 +81,7 @@ class PostAdminController extends BaseController
      */
     public function editAction(Post $post)
     {
-        $form = $this->createForm(new PostType(PostType::EDIT_TYPE), $post);
+        $form = $this->createForm(new PostType(), $post);
 
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
@@ -96,10 +96,10 @@ class PostAdminController extends BaseController
             }
         }
 
-        return array(
+        return $this->render('PhoshMainBundle:PostAdmin:form.html.twig', array(
             'post' => $post,
             'form' => $form->createView(),
-        );
+        ));
     }
 
     /**

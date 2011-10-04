@@ -52,6 +52,11 @@ class Post
         return $this->body;
     }
 
+    public function getBodyHtml()
+    {
+        return \Markdown($this->getBody());
+    }
+
     public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;

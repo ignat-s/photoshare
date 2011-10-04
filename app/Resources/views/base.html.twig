@@ -69,9 +69,12 @@
           border: 0;
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('js/jqueryFileTree/jqueryFileTree.css') }}"/>
     {% block stylesheets %}{% endblock %}
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script src="{{ asset('js/lib/jquery.urlencode.js') }}"></script>
+    <script src="{{ asset('js/jqueryFileTree/jqueryFileTree.js') }}"></script>
     <script type="text/javascript" src="http://twitter.github.com/bootstrap/1.3.0/bootstrap-modal.js"></script>
     <script type="text/javascript" src="http://twitter.github.com/bootstrap/1.3.0/bootstrap-alerts.js"></script>
     {% block scripts %}{% endblock %}
@@ -110,26 +113,26 @@
                 {% endblock %}
                 </div>
 
-                    {% if breadcrumbs is defined and breadcrumbs %}
-                        <ul class="breadcrumb">
-                            <li><a href="{{ path('index') }}">Home</a> <span class="divider">/</span></li>
-                            {% for breadcrumb in breadcrumbs %}
-                                <li>
-                                    {% if breadcrumb.path is defined %}
-                                        {% if not loop.last and (breadcrumb.role is not defined or is_granted(breadcrumb.role)) %}
-                                            <a href="{{ breadcrumb.path }}">{{ breadcrumb.name }}</a><span class="divider">/</span>
-                                        {% else %}
-                                            {{ breadcrumb.name }}
-                                        {% endif %}
-                                    {% elseif breadcrumb.name is defined %}
-                                        {{ breadcrumb.name }}
+                {% if is_granted('ROLE_ADMIN') and breadcrumbs is defined and breadcrumbs|length %}
+                    <ul class="breadcrumb">
+                        <li><a href="{{ path('index') }}">Home</a> <span class="divider">/</span></li>
+                        {% for breadcrumb in breadcrumbs %}
+                            <li>
+                                {% if breadcrumb.path is defined %}
+                                    {% if not loop.last and (breadcrumb.role is not defined or is_granted(breadcrumb.role)) %}
+                                        <a href="{{ breadcrumb.path }}">{{ breadcrumb.name }}</a><span class="divider">/</span>
                                     {% else %}
-                                        {{ breadcrumb }}
+                                        {{ breadcrumb.name }}
                                     {% endif %}
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
+                                {% elseif breadcrumb.name is defined %}
+                                    {{ breadcrumb.name }}
+                                {% else %}
+                                    {{ breadcrumb }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
 
 
                      <!--<li><a href="#">Home</a> <span class="divider">/</span></li>

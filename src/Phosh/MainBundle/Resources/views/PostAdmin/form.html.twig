@@ -1,0 +1,129 @@
+{% extends 'PhoshMainBundle:PostAdmin:layout.html.twig' %}
+
+{% block content_inner %}
+
+    <form action="{{ path('post_' ~ (post.id ? 'edit' : 'create'), { 'id': post.id }) }}" method="post">
+        {{ form_errors(form) }}
+        <fieldset>
+            <div class="clearfix {% if form.title.get('errors')|length %}error{% endif %}">
+                {{ form_label(form.title) }}
+                <div class="input">
+                    {{ form_widget(form.title, { 'attr' : {'class' : 'xlarge'} }) }}
+                    {{ form_errors(form.title) }}
+                </div>
+            </div>
+
+            <div class="clearfix {% if form.body.get('errors')|length %}error{% endif %}">
+                {{ form_label(form.body) }}
+                <div class="input">
+                    <span class="help-inline">Use <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">markdown syntax</a></span>
+                    {{ form_widget(form.body, { 'attr' : {'class' : 'span12', 'style' : 'height: 500px;' } }) }}
+                    {{ form_errors(form.body) }}
+                    <div style="padding-top: 5px;">
+                        <a id="add-image-button" class="btn small primary" href="javascript:void(0);" data-controls-modal="modal-select-image" data-backdrop="true" title="Add image at cursor position">Add Image</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix {% if form.expiredAt.get('errors')|length %}error{% endif %}">
+                {{ form_label(form.expiredAt) }}
+                <div class="input">
+                    {{ form_widget(form.expiredAt.date, { 'attr' : {'placeholder' : 'YYYY/MM/DD' } }) }}
+                    {{ form_widget(form.expiredAt.time, { 'attr' : {'placeholder' : 'HH:MM:SS' } }) }}
+                    {{ form_errors(form.expiredAt) }}
+                </div>
+            </div>
+
+            <div class="clearfix {% if form.regenerateToken.get('errors')|length %}error{% endif %}" {% if not post.id %} style="display: none;"{% endif %}>
+                {{ form_label(form.regenerateToken) }}
+                <div class="input">
+                    <div class="input-prepend">
+                        {{ form_widget(form.token, { 'attr' : {'class' : 'span8'} }) }}
+                        <label class="add-on active">{{ form_widget(form.regenerateToken) }}</label>
+                        {{ form_errors(form.token) }}
+                    </div>
+                </div>
+            </div>
+
+            {{ form_rest(form) }}
+
+            <div class="actions">
+                <input type="submit" name="submit" value="Save" class="btn primary"/>
+                <input type="reset" name="submit" value="Reset" class="btn"/>
+            </div>
+        </fieldset>
+    </form>
+
+    <div id="modal-select-image" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <a href="#" class="close">×</a>
+            <h3>Select image from storage</h3>
+        </div>
+        <div class="modal-body">
+            <table>
+                <tr>
+                    <td>
+                        <div id="fileTree"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="preview">
+                            <div class="thumb"></div>
+                            <div class="name"></div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:$('#modal-select-image').modal('hide')" class="btn secondary">Cancel</a>
+            <a class="select-image-button btn success" href="javascript:void(0);" style="display: none;">Select</a>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var selectedImage;
+            var selectImageHandler = function(file) {
+                var thumbURL = '{{ path('post_image_thumb', {'token': post.token}) }}?p=' + $.URLEncode(file);
+                var originURL = '{{ path('post_image_full', {'token': post.token}) }}?p=' + $.URLEncode(file);
+
+                var imageString = '[![](' + thumbURL + ')](' + originURL + ')';
+                $('#modal-select-image').modal('hide');
+                $('#phosh_main_post_body').insertAtCaret(imageString);
+            }
+            $('#fileTree').fileTree({
+                root: '/',
+                script: '{{ path('filestorage_tree') }}',
+                folderEvent: 'dblclick',
+                clickHandler: function (p) {
+                    selectedImage = null;
+                    $('#modal-select-image .preview .name *').remove();
+                    $('#modal-select-image .preview .thumb *').remove();
+
+                    if (p.type == 'file' && p.file.split('.').pop().toLowerCase() in { jpg:1, jpeg:1, png:1 }) {
+                        selectedImage = p.file;
+                        $('#modal-select-image .select-image-button').show();
+                        $('#modal-select-image .preview .name').append('<p>' + p.file + '</p>');
+                        $('#modal-select-image .preview .thumb').append('<img class="thumbnail" src="{{ path('filestorage_imagethumb') }}?p=' + p.file + '&w=150&h=150"/>');
+                    } else {
+                        $('#modal-select-image .select-image-button').hide();
+                    }
+
+                    if (p.event.type == 'dblclick' && p.type == 'file') {
+                        selectImageHandler(p.file);
+                    }
+                }
+            });
+
+            $('#modal-select-image .select-image-button').click(function() {
+                if (selectedImage) {
+                    selectImageHandler(selectedImage);
+                }
+            })
+        });
+    </script>
+
+
+{% endblock %}

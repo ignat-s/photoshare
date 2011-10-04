@@ -1,0 +1,16 @@
+{% if elements|length%}
+    <ul class="jqueryFileTree" style="display: none;">
+        {# dirs #}
+        {% for el in elements %}
+            {% if 'dir' == el.type %}
+                <li class="directory collapsed"><a href="#" rel="{{ el.path }}/">{{ el.name }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {# files #}
+        {% for el in elements %}
+            {% if 'file' == el.type %}
+                <li class="file ext_{{ el.ext|lower }}"><a href="#" rel="{{ el.path }}">{{ el.name }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endif %}

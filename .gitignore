@@ -1,5 +1,7 @@
+.idea
+app/cache/*
+app/logs/*
+photostorage/*
+tests/coverage
 vendor
 web/bundles
-.idea
-tests/coverage
-photostorage/*
