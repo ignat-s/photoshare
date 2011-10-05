@@ -19,7 +19,7 @@ class DefaultControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/');
 
         $this->assertEquals($statusCode = 200, $client->getResponse()->getStatusCode(), "getStatusCode != $statusCode");
-        $this->assertTrue($crawler->filter($selector = 'h1:contains("Photoshare")')->count() > 0, "->filter($selector)->count() > 0 is false.");
+        $this->assertTrue($crawler->filter($selector = 'a.brand:contains("Project name")')->count() > 0, "->filter($selector)->count() > 0 is false.");
     }
 
     public function testIndexActionAnonymousWorks()
@@ -29,6 +29,6 @@ class DefaultControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/');
 
         $this->assertEquals($statusCode = 200, $client->getResponse()->getStatusCode(), "getStatusCode != $statusCode");
-        $this->assertTrue($crawler->filter($selector = 'h1:contains("Photoshare")')->count() > 0, "->filter($selector)->count() > 0 is false.");
+        $this->assertTrue($crawler->filter($selector = 'a.brand:contains("Project name")')->count() > 0, "->filter($selector)->count() > 0 is false.");
     }
 }

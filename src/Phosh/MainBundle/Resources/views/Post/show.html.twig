@@ -5,5 +5,5 @@
 {% block page_header %}<h1>{{ post.title }}</h1>{% endblock %}
 
 {% block content %}
-    {{ post.bodyHtml|raw }}
+    {{ post|post_html|raw }}
 {% endblock %}

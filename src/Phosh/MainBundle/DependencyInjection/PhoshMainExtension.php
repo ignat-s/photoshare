@@ -19,6 +19,7 @@ class PhoshMainExtension extends Extension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('config.xml');
+        $loader->load('twig.xml');
 
         $container->setParameter('phosh.storage_dir', $config['storage_dir']);
         $container->setParameter('phosh.thumbs_dir', $config['thumbs_dir']);

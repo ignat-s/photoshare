@@ -19,7 +19,8 @@
     </title>
 
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css">
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css" />
+    <link rel="stylesheet" href="{{ asset('media/colorbox/colorbox.css') }}" />
     <style type="text/css">
         /* Override some defaults */
         html, body {
@@ -69,14 +70,22 @@
           border: 0;
         }
     </style>
-    <link rel="stylesheet" href="{{ asset('js/jqueryFileTree/jqueryFileTree.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('media/filetree/filetree.css') }}"/>
     {% block stylesheets %}{% endblock %}
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-    <script src="{{ asset('js/lib/jquery.urlencode.js') }}"></script>
-    <script src="{{ asset('js/jqueryFileTree/jqueryFileTree.js') }}"></script>
+    <script src="{{ asset('media/filetree/jquery.filetree.js') }}"></script>
+    <script src="{{ asset('media/colorbox/jquery.colorbox-min.js') }}"></script>
     <script type="text/javascript" src="http://twitter.github.com/bootstrap/1.3.0/bootstrap-modal.js"></script>
     <script type="text/javascript" src="http://twitter.github.com/bootstrap/1.3.0/bootstrap-alerts.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+    		$("a.colorbox").colorbox({
+    		    maxWidth: '90%',
+    		    maxHeight: '90%'
+    		});
+    	});
+    </script>
     {% block scripts %}{% endblock %}
 </head>
 <body>

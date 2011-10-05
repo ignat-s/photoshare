@@ -86,14 +86,11 @@
         $(document).ready(function() {
             var selectedImage;
             var selectImageHandler = function(file) {
-                var thumbURL = '{{ path('post_image_thumb', {'token': post.token}) }}?p=' + $.URLEncode(file);
-                var originURL = '{{ path('post_image_full', {'token': post.token}) }}?p=' + $.URLEncode(file);
-
-                var imageString = '[![](' + thumbURL + ')](' + originURL + ')';
+                var imageString = '<photo src="' + encodeURI(file) + '"/>';
                 $('#modal-select-image').modal('hide');
                 $('#phosh_main_post_body').insertAtCaret(imageString);
             }
-            $('#fileTree').fileTree({
+            $('#fileTree').filetree({
                 root: '/',
                 script: '{{ path('filestorage_tree') }}',
                 folderEvent: 'dblclick',
@@ -124,6 +121,5 @@
             })
         });
     </script>
-
 
 {% endblock %}
