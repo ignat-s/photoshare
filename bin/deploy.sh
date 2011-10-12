@@ -1,8 +1,9 @@
 #!/bin/sh
 
 # Initializing dirs
-source_dir=$1
-target_dir=$2
+source_dir=$(dirname $(dirname $0))
+
+target_dir=$1
 
 assert_dir()
 {
