@@ -17,7 +17,7 @@ class PostType extends AbstractType
                         'years' => range(date('Y'), date('Y') + 1),
                         'date_widget' => 'single_text',
                         'time_widget' => 'single_text',
-                        'date_format' => 'Y/MM/d',
+                        'date_format' => 'yyyy/MM/dd',
                     ));
 
         $builder->add('token', 'text', array(

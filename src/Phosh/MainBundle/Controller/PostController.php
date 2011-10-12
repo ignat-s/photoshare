@@ -40,7 +40,7 @@ class PostController extends BaseController
         if (!$this->isGranted('ROLE_ADMIN')) {
             $this->assertFalse($post->isExpired());
         }
-        
+
         $width = $this->getRequest()->get('h', 640);
         $height = $this->getRequest()->get('w', 640);
         $path = $this->getRequest()->get('p');
@@ -68,9 +68,28 @@ class PostController extends BaseController
 
     private function createImageResponse($imagePath, $format)
     {
-        return new \Symfony\Component\HttpFoundation\Response(file_get_contents($imagePath), 200, array(
-                'Content-Type' => 'image/' . $format,
-            ));
+        $fileModTime = filemtime($imagePath);
+
+        $headers = array(
+            'Content-Type' => 'image/' . $format,
+        );
+
+        // Checking if the client is validating his cache and if it is current.
+        if (($this->getRequest()->headers->has('If-Modified-Since')) && (strtotime($this->getRequest()->headers->get('If-Modified-Since')) == $fileModTime)) {
+            // Client's cache IS current, so we just respond '304 Not Modified'.
+            $headers['Last-Modified'] = gmdate('D, d M Y H:i:s', $fileModTime) . ' GMT';
+            $responseCode = 304;
+        } else {
+            // Image not cached or cache outdated, we respond '200 OK' and output the image.
+            $headers += array(
+                'Last-Modified' => gmdate('D, d M Y H:i:s', $fileModTime) . ' GMT',
+                'Content-transfer-encoding' => 'binary',
+                'Content-length' => filesize($imagePath),
+            );
+            $responseCode = 200;
+        }
+
+        return new \Symfony\Component\HttpFoundation\Response(file_get_contents($imagePath), $responseCode, $headers);
     }
 
     /**
@@ -80,4 +99,27 @@ class PostController extends BaseController
     {
         return $this->get('phosh.photo_storage');
     }
+
+    // return the browser request header
+    // use built in apache ftn when PHP built as module,
+    // or query $_SERVER when cgi
+    function getRequestHeaders()
+    {
+
+
+        if (function_exists("apache_request_headers")) {
+            if ($headers = apache_request_headers()) {
+                return $headers;
+
+            }
+        }
+        $headers = array();
+        // Grab the IF_MODIFIED_SINCE header
+        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+            $headers['If-Modified-Since'] = $_SERVER['HTTP_IF_MODIFIED_SINCE'];
+        }
+        return $headers;
+
+    }
+
 }
