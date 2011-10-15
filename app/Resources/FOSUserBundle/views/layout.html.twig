@@ -1,0 +1,25 @@
+{% extends '::base.html.twig' %}
+
+{% set active_route = app.request.get('_route') %}
+
+{% if active_route == 'fos_user_profile_show' %}
+    {% set page_title = 'Profile' %}
+{% elseif active_route == 'fos_user_profile_edit' %}
+    {% set page_title = 'Edit profile' %}
+{% elseif active_route == 'fos_user_change_password' %}
+    {% set page_title = 'Change password' %}
+{% endif %}
+
+{% block content %}
+    {% if active_route in ['fos_user_profile_show', 'fos_user_profile_edit', 'fos_user_change_password'] %}
+        <ul class="tabs">
+            <li {% if active_route == 'fos_user_profile_show'  %}class="active"{% endif %}><a href="{{ path('fos_user_profile_show') }}">Profile</a></li>
+            <li {% if active_route == 'fos_user_profile_edit' %}class="active"{% endif %}><a href="{{ path('fos_user_profile_edit') }}">Edit</a></li>
+            <li {% if active_route == 'fos_user_change_password' %}class="active"{% endif %}><a href="{{ path('fos_user_change_password') }}">Change password</a></li>
+        </ul>
+        <img src="/blank.png" width="1" height="1"/>
+    {% endif %}
+
+    {% block fos_user_content %}
+    {% endblock fos_user_content %}
+{% endblock %}

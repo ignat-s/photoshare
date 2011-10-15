@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="phosh.photo_storage.class">Phosh\MainBundle\PhotoStorage</parameter>
+        <parameter key="phosh.http.image_response_factory.class">Phosh\MainBundle\HttpFoundation\ImageResponseFactory</parameter>
         <parameter key="phosh.storage_dir"/>
         <parameter key="phosh.thumbs_dir"/>
     </parameters>
@@ -14,6 +15,9 @@
         <service id="phosh.photo_storage" class="%phosh.photo_storage.class%">
             <argument>%phosh.storage_dir%</argument>
             <argument>%phosh.thumbs_dir%</argument>
+        </service>
+        <service id="phosh.http.image_response_factory" class="%phosh.http.image_response_factory.class%" scope="request">
+            <argument type="service" id="request" />
         </service>
     </services>
 </container>

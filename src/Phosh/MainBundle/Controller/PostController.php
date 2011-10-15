@@ -41,12 +41,16 @@ class PostController extends BaseController
             $this->assertFalse($post->isExpired());
         }
 
+        $path = $this->getRequest()->get('p');
+        $this->assertTrue($post->hasAttachedPhoto($path));
+
         $width = $this->getRequest()->get('h', 640);
         $height = $this->getRequest()->get('w', 640);
-        $path = $this->getRequest()->get('p');
 
-        $photoThumb = $this->getPhotoStorage()->getPhotoThumbPath($path, $width, $height, $format);
-        return $this->createImageResponse($photoThumb, $format);
+        $rotateAngle = $this->getPhotoStorage()->decodeRotateAngle($this->getRequest()->get('r'));
+
+        $photoThumb = $this->getPhotoStorage()->getPhotoThumbPath($path, $width, $height, $format, $rotateAngle);
+        return $this->getImageResponseFactory()->createImageResponse($photoThumb, $format);
     }
 
     /**
@@ -61,35 +65,20 @@ class PostController extends BaseController
         }
 
         $path = $this->getRequest()->get('p');
+        $this->assertTrue($post->hasAttachedPhoto($path));
 
-        $photoThumb = $this->getPhotoStorage()->getPhotoPath($path, $format);
-        return $this->createImageResponse($photoThumb, $format);
+        $rotateAngle = $this->getPhotoStorage()->decodeRotateAngle($this->getRequest()->get('r'));
+
+        $photoThumb = $this->getPhotoStorage()->getPhotoPath($path, $rotateAngle);
+        return $this->getImageResponseFactory()->createImageResponse($photoThumb, $format);
     }
 
-    private function createImageResponse($imagePath, $format)
+    /**
+     * @return \Phosh\MainBundle\HttpFoundation\ImageResponseFactory
+     */
+    private function getImageResponseFactory()
     {
-        $fileModTime = filemtime($imagePath);
-
-        $headers = array(
-            'Content-Type' => 'image/' . $format,
-        );
-
-        // Checking if the client is validating his cache and if it is current.
-        if (($this->getRequest()->headers->has('If-Modified-Since')) && (strtotime($this->getRequest()->headers->get('If-Modified-Since')) == $fileModTime)) {
-            // Client's cache IS current, so we just respond '304 Not Modified'.
-            $headers['Last-Modified'] = gmdate('D, d M Y H:i:s', $fileModTime) . ' GMT';
-            $responseCode = 304;
-        } else {
-            // Image not cached or cache outdated, we respond '200 OK' and output the image.
-            $headers += array(
-                'Last-Modified' => gmdate('D, d M Y H:i:s', $fileModTime) . ' GMT',
-                'Content-transfer-encoding' => 'binary',
-                'Content-length' => filesize($imagePath),
-            );
-            $responseCode = 200;
-        }
-
-        return new \Symfony\Component\HttpFoundation\Response(file_get_contents($imagePath), $responseCode, $headers);
+        return $this->get('phosh.http.image_response_factory');
     }
 
     /**

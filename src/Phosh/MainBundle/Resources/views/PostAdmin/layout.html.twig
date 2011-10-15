@@ -1,7 +1,6 @@
 {% extends '::base.html.twig' %}
 
 {% set page_title = 'Posts' %}
-{% set page_secondary_title = 'Administration' %}
 {% set breadcrumbs = [{ 'name': 'Posts', 'path': path('post_index') }] %}
 {% set route = app.request.get('_route') %}
 
@@ -45,7 +44,7 @@
                 <h3>Are you sure you want to delete post?</h3>
             </div>
             <div class="modal-footer">
-                <a href="javascript:$('#modal-delete-post').modal('hide')" class="btn secondary">No</a>
+                <a href="#" onclick="$('#modal-delete-post').modal('hide'); return false;" class="btn secondary">No</a>
                 <a href="{{ path('post_delete', {'id': post.id}) }}" class="btn primary">Yes</a>
             </div>
         </div>

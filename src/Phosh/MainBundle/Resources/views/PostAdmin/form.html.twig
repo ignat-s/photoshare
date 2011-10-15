@@ -5,13 +5,7 @@
     <form action="{{ path('post_' ~ (post.id ? 'edit' : 'create'), { 'id': post.id }) }}" method="post">
         {{ form_errors(form) }}
         <fieldset>
-            <div class="clearfix {% if form.title.get('errors')|length %}error{% endif %}">
-                {{ form_label(form.title) }}
-                <div class="input">
-                    {{ form_widget(form.title, { 'attr' : {'class' : 'xlarge'} }) }}
-                    {{ form_errors(form.title) }}
-                </div>
-            </div>
+            {{ form_row(form.title) }}
 
             <div class="clearfix {% if form.body.get('errors')|length %}error{% endif %}">
                 {{ form_label(form.body) }}
@@ -28,8 +22,8 @@
             <div class="clearfix {% if form.expiredAt.get('errors')|length %}error{% endif %}">
                 {{ form_label(form.expiredAt) }}
                 <div class="input">
-                    {{ form_widget(form.expiredAt.date, { 'attr' : {'placeholder' : 'YYYY/MM/DD' } }) }}
-                    {{ form_widget(form.expiredAt.time, { 'attr' : {'placeholder' : 'HH:MM:SS' } }) }}
+                    {{ form_widget(form.expiredAt.date, { 'attr' : {'placeholder' : 'YYYY/MM/DD', 'class': 'small' } }) }}
+                    {{ form_widget(form.expiredAt.time, { 'attr' : {'placeholder' : 'HH:MM:SS', 'class': 'small' } }) }}
                     {{ form_errors(form.expiredAt) }}
                 </div>
             </div>
@@ -60,52 +54,81 @@
             <h3>Select image from storage</h3>
         </div>
         <div class="modal-body">
-            <table>
-                <tr>
-                    <td>
-                        <div id="fileTree"></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="preview">
-                            <div class="thumb"></div>
-                            <div class="name"></div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+            <div>
+                <div id="fileTree" style="max-height: 200px; overflow: auto;"></div>
+                <div class="preview" style="display: none; height: 170px; padding-top: 5px; overflow: auto;" >
+                    <div class="name" style="clear: both;"></div>
+                    <div class="thumb" style="float: left;"></div>
+                    <div class="rotate" style="float: left; padding-left: 5px;">
+                        <input type="radio" name="rotate" value="" checked="checked"/> don't rotate<br />
+                        <input type="radio" name="rotate" value="90cw"/> 90&deg; clockwise <br />
+                        <input type="radio" name="rotate" value="90ccw"/> 90&deg; counter-clockwise <br />
+                        <input type="radio" name="rotate" value="180"/> 180&deg;
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
-            <a href="javascript:$('#modal-select-image').modal('hide')" class="btn secondary">Cancel</a>
+            <a href="#" onclick="$('#modal-select-image').modal('hide'); return false;" class="btn secondary">Cancel</a>
             <a class="select-image-button btn success" href="javascript:void(0);" style="display: none;">Select</a>
         </div>
     </div>
 
     <script type="text/javascript">
         $(document).ready(function() {
-            var selectedImage;
+            var selectedImagePath;
+
+            // Handler of image select, called when user double click on image in tree or wher he click Select button
+            var getSelectedImageHtml = function() {
+                var src = '{{ path('filestorage_imagethumb') }}?p=' + selectedImagePath + '&w=150&h=150&r=' + getRotate();
+                var html = '<img class="thumbnail" src="' + src.replace(/"/g, '%22') + '"/>';
+                return html;
+            }
+            
+            var getRotate = function() {
+                return rotate = $('#modal-select-image input[name=rotate]:checked').val();
+            }
+
+            var resetRotate = function() {
+                $('#modal-select-image input[name=rotate][value=""]').attr('checked', 'checked');
+            }
+
             var selectImageHandler = function(file) {
-                var imageString = '<photo src="' + encodeURI(file) + '"/>';
+                var rotate = getRotate();
+                var imageString = '<photo src="' + file.replace(/"/g, '%22') + '"' + (rotate ? ' rotate="' + rotate + '"' : '') + '/>';
                 $('#modal-select-image').modal('hide');
                 $('#phosh_main_post_body').insertAtCaret(imageString);
             }
+
+            $('#modal-select-image input[name=rotate]').change(function() {
+                $('#modal-select-image .preview .thumb').empty().append(getSelectedImageHtml());
+            })
+
+            // Reset rotating
+            $('#modal-select-image').bind('show', function() {
+                resetRotate();
+            })
+            
+            // Init file tree
             $('#fileTree').filetree({
                 root: '/',
                 script: '{{ path('filestorage_tree') }}',
                 folderEvent: 'dblclick',
                 clickHandler: function (p) {
-                    selectedImage = null;
-                    $('#modal-select-image .preview .name *').remove();
-                    $('#modal-select-image .preview .thumb *').remove();
+                    resetRotate();
+                    $('#modal-select-image .preview .name').empty();
+                    $('#modal-select-image .preview .thumb').empty();
 
                     if (p.type == 'file' && p.file.split('.').pop().toLowerCase() in { jpg:1, jpeg:1, png:1 }) {
-                        selectedImage = p.file;
+                        selectedImagePath = p.file;
+                        console.log(selectedImagePath);
+                        $('#modal-select-image .preview').show();
                         $('#modal-select-image .select-image-button').show();
-                        $('#modal-select-image .preview .name').append('<p>' + p.file + '</p>');
-                        $('#modal-select-image .preview .thumb').append('<img class="thumbnail" src="{{ path('filestorage_imagethumb') }}?p=' + p.file + '&w=150&h=150"/>');
+                        $('#modal-select-image .preview .name').append(p.file);
+                        $('#modal-select-image .preview .thumb').append(getSelectedImageHtml());
                     } else {
                         $('#modal-select-image .select-image-button').hide();
+                        $('#modal-select-image .preview').hide();
                     }
 
                     if (p.event.type == 'dblclick' && p.type == 'file') {
@@ -114,10 +137,9 @@
                 }
             });
 
+            //
             $('#modal-select-image .select-image-button').click(function() {
-                if (selectedImage) {
-                    selectImageHandler(selectedImage);
-                }
+                selectImageHandler(selectedImagePath);
             })
         });
     </script>

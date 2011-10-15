@@ -12,9 +12,8 @@ security:
       users:
         user:  { password: userpass, roles: [ 'ROLE_USER' ] }
         admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
-    #doctrine:
-    #  name: entity
-    #  entity: { class: PhoshBundle:User }
+    fos_userbundle:
+      id: fos_user.user_manager
 
   firewalls:
     dev:
@@ -24,19 +23,20 @@ security:
     main:
       pattern:    ^/.*
       anonymous: ~
-      http_basic:
-        #provider:
-        provider: in_memory
       form_login:
-        #provider: entity
-        provider: in_memory
+        provider: fos_userbundle
+        default_target_path: /admin/posts
       logout:
         invalidate_session: true
+        target: /login
       remember_me:
         key:  iadkfia~!~304-0ieefdsgdsg%%(@_(!@(13ddaadsdsaads;kwd!@@$!?093808903212dd
         lifetime: 86400 # in seconds
 
   access_control:
-    - { path: ^/admin.*$, roles: ROLE_ADMIN }
+    - { path: ^/admin/, roles: ROLE_ADMIN }
+    - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
     #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
     #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }
