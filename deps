@@ -94,7 +94,12 @@
     git=http://github.com/stof/StofDoctrineExtensionsBundle.git
     target=/vendor/bundles/Stof/DoctrineExtensionsBundle
 
+[MopaBootstrapBundle]
+    git=http://github.com/phiamo/MopaBootstrapBundle.git
+    target=/vendor/bundles/Mopa/BootstrapBundle
+
 [imagine]
     git=http://github.com/avalanche123/Imagine.git
     version=v0.1.5
     target=/vendor/imagine
+    

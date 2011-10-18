@@ -39,7 +39,8 @@ class PostExtension extends \Twig_Extension
         $postTitle = htmlspecialchars($post->getTitle());
 
         $html = $this->transformMarkdown($post->getBody());
-        $html = preg_replace('/<photo\s+src="([^"]+)"(\/>|<\/photo>)/i', sprintf("<a class=\"colorbox\" rel=\"%s\" href=\"%s?p=$1\"><img src=\"%s?p=$1\"/></a>", $postTitle, $imageFullUrl, $imageThumbUrl), $html);
+        $html = preg_replace('/<photo\s+src="([^"]+)"\s*(rotate="(90cw|90ccw|180)")?\s*\/>/i', sprintf("<a class=\"colorbox\" rel=\"%s\" href=\"%s?r=$3&p=$1\"><img src=\"%s?p=$1&r=$3\"/></a>", $postTitle, $imageFullUrl, $imageThumbUrl), $html);
+        $html = preg_replace('/<photo\s+(rotate="(90cw|90ccw|180)")?\s*src="([^"]+)"\s*\/>/i', sprintf("<a class=\"colorbox\" rel=\"%s\" href=\"%s?r=$3&p=$1\"><img src=\"%s?p=$3&r=$2\"/></a>", $postTitle, $imageFullUrl, $imageThumbUrl), $html);
 
         return $html;
     }

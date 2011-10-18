@@ -17,12 +17,14 @@ use Phosh\MainBundle\Form\Type\PostType;
 class FileStorageController extends BaseController
 {
     /**
-     * @Route("/tree", name="filestorage_tree", requirements={"_method"="POST"})
+     * @Route("/tree", name="filestorage_tree")
      * @Template()
      */
     public function treeAction()
     {
         $relativeDir = $this->getRequest()->get('dir');
+        /*var_dump(urldecode($relativeDir));
+        die();*/
         $absolutedir = $this->getPhotoStorage()->getAbsolutePath($relativeDir);
 
         $this->assertTrue(is_dir($absolutedir));
@@ -61,16 +63,18 @@ class FileStorageController extends BaseController
         $width = $this->getRequest()->get('h', 100);
         $height = $this->getRequest()->get('w', 100);
         $path = $this->getRequest()->get('p');
+        $rotateAngle = $this->getPhotoStorage()->decodeRotateAngle($this->getRequest()->get('r'));
         
-        $photoThumb = $this->getPhotoStorage()->getPhotoThumbPath($path, $width, $height, $format);
-        return $this->createImageResponse($photoThumb, $format);
+        $photoThumb = $this->getPhotoStorage()->getPhotoThumbPath($path, $width, $height, $format, $rotateAngle);
+        return $this->getImageResponseFactory()->createImageResponse($photoThumb, $format);
     }
 
-    private function createImageResponse($imagePath, $format)
+    /**
+     * @return \Phosh\MainBundle\HttpFoundation\ImageResponseFactory
+     */
+    private function getImageResponseFactory()
     {
-        return new \Symfony\Component\HttpFoundation\Response(file_get_contents($imagePath), 200, array(
-                'Content-Type' => 'image/' . $format,
-            ));
+        return $this->get('phosh.http.image_response_factory');
     }
 
     /**

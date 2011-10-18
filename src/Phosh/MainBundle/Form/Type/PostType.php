@@ -10,15 +10,20 @@ class PostType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('title', 'text', array('label' => 'Title'))
-                ->add('body', 'textarea', array('label' => 'Body'))
-                ->add('expiredAt', 'datetime', array(
-                        'label' => 'Expired at',
-                        'years' => range(date('Y'), date('Y') + 1),
-                        'date_widget' => 'single_text',
-                        'time_widget' => 'single_text',
-                        'date_format' => 'yyyy/MM/dd',
-                    ));
+        $builder->add('title', 'text', array(
+            'label' => 'Title',
+            'attr' => array(
+                'class' => 'span12',
+            ),
+        ))
+        ->add('body', 'textarea', array('label' => 'Body'))
+        ->add('expiredAt', 'datetime', array(
+            'label' => 'Expired at',
+            'years' => range(date('Y'), date('Y') + 1),
+            'date_widget' => 'single_text',
+            'time_widget' => 'single_text',
+            'date_format' => 'yyyy/MM/dd',
+        ));
 
         $builder->add('token', 'text', array(
             'label' => 'Token',

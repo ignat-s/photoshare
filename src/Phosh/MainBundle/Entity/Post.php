@@ -15,6 +15,7 @@ class Post
     private $expiredAt;
     private $updatedAt;
     private $regenerateToken = false;
+    private $attachedPhotos = array();
 
     public function __construct()
     {
@@ -50,6 +51,16 @@ class Post
     public function getBody()
     {
         return $this->body;
+    }
+
+    public function getAttachedPhotos()
+    {
+        return $this->attachedPhotos;
+    }
+
+    public function hasAttachedPhoto($photo)
+    {
+        return in_array($photo, $this->attachedPhotos);
     }
 
     public function setCreatedAt(\DateTime $createdAt)
@@ -116,6 +127,19 @@ class Post
     {
         if ($this->isRegenerateToken()) {
             $this->token = $this->generateToken();
+        }
+    }
+
+    public function calculateAttachedPhotos()
+    {
+        preg_match_all('/<photo\s.*src="([^"]+)".*\/>/i', $this->body, $matches);
+        if ($matches) {
+            $this->attachedPhotos = array();
+            foreach ($matches[1] as $photo) {
+                $this->attachedPhotos[] = urldecode($photo);
+            }
+        } else {
+            $this->attachedPhotos = array();
         }
     }
 

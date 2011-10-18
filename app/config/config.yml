@@ -5,6 +5,7 @@ imports:
 framework:
   #esi:             ~
   #translator:      { fallback: %locale% }
+  translator: ~
   secret:          %secret%
   charset:         UTF-8
   router:          { resource: "%kernel.root_dir%/config/routing.yml" }
@@ -22,7 +23,8 @@ twig:
   debug:            %kernel.debug%
   strict_variables: %kernel.debug%
   form:
-    resources:      ['::fields.html.twig']
+    resources:
+      - '::fields.html.twig'
 
 # Assetic Configuration
 assetic:
@@ -77,3 +79,13 @@ knp_menu:
 phosh_main:
   storage_dir: %kernel.root_dir%/../photostorage
   thumbs_dir: %kernel.cache_dir%/thumbs
+
+mopa_bootstrap:
+  form:
+    show_legend: false # default is true
+    show_legend: false # default is true
+
+fos_user:
+  db_driver: orm # other valid values are 'mongodb', 'couchdb'
+  firewall_name: main
+  user_class: Phosh\MainBundle\Entity\User

@@ -1,29 +1,16 @@
-{% extends 'form_div_layout.html.twig' %}
+{% extends 'MopaBootstrapBundle:Form:fields.html.twig' %}
 
-{% block form_errors %}
+{% block generic_label %}
 {% spaceless %}
-    {% if errors|length > 0 %}
-        <div class="alert-message error fade in" data-alert="alert">
-            <a class="close" href="#">×</a>
-            {% for error in errors %}
-                <strong>{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}<br/>
-            {% endfor %}
-        </div>
+    {% if required %}
+        {% set attr = attr|merge({'class': attr.class|default('') ~ ' required'}) %}
     {% endif %}
-{% endspaceless %}
-{% endblock form_errors %}
-
-
-{% block field_errors %}
-{% spaceless %}
-    {% if errors|length > 0 %}
-        <div>
-            <span class="help-inline">
-                {% for error in errors %}
-                    {{ error.messageTemplate|trans(error.messageParameters, 'validators') }}<br/>
-                {% endfor %}
-            </span>
-        </div>
+    <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+    {% set fos_user_label = id|trans([], 'FOSUserBundle') %}
+    {{ id == fos_user_label ? label|trans : fos_user_label }}
+    {% if help_label %}{# TODO erstzten durch function form_help) #}
+        <span class="help-block">{{ help_label|trans }}</span>
     {% endif %}
+    </label>
 {% endspaceless %}
-{% endblock field_errors %}
+{% endblock %}

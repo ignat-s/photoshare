@@ -1,5 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+{% set show_topbar = is_granted('ROLE_ADMIN') %}
+{% set padding_top_px = show_topbar ? '40px' : '0px' %}
+{% set show_footer = is_granted('ROLE_ADMIN') %}
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>
@@ -26,8 +29,9 @@
         html, body {
           background-color: #eee;
         }
+
         body {
-          padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+          padding-top: {{ padding_top_px }}/*40px*/; /* 40px to make the container go all the way to the bottom of the topbar */
         }
         .container > footer p {
           text-align: center; /* center align it with the container */
@@ -89,27 +93,24 @@
     {% block scripts %}{% endblock %}
 </head>
 <body>
+    {% if show_topbar %}
     <div class="topbar">
         <div class="fill">
             <div class="container">
-                <a class="brand" href="{{ path('index') }}">Project name</a>
+                <a class="brand" href="{{ path('post_index') }}">Project name</a>
                 <ul class="nav">
-                    <li class="active"><a href="{{ path('index') }}">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="{{ path('post_index') }}">Posts</a></li>
                 </ul>
                 <ul class="nav secondary-nav">
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li><a href="{{ path('post_index') }}">Posts</a></li>
-                    {% endif %}
                     {% if is_granted('ROLE_USER') %}
-                        <li><a href="javascript:void(0);">{{ app.user.username }}</a></li>
-                        <li><a href="{{ path('logout') }}">Logout</a></li>
+                        <li><a href="{{ path('fos_user_profile_show') }}">{{ app.user.username }}</a></li>
+                        <li><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </div>
+    {% endif %}
 
     <div class="container">
         <div class="content">
@@ -117,14 +118,14 @@
                 <div class="page-header">
                 {% block page_header %}
                     {% if page_title is defined %}
-                        <h1>{{ page_title }} {% if page_secondary_title is defined%}<small>{{ page_secondary_title }}</small>{% endif %}</h1>
+                        <h1>{{ page_title }} {% if is_granted('ROLE_ADMIN') %}<small>Administration</small>{% endif %}</h1>
                     {% endif %}
                 {% endblock %}
                 </div>
 
                 {% if is_granted('ROLE_ADMIN') and breadcrumbs is defined and breadcrumbs|length %}
                     <ul class="breadcrumb">
-                        <li><a href="{{ path('index') }}">Home</a> <span class="divider">/</span></li>
+                        <li><a href="{{ path('post_index') }}">Home</a> <span class="divider">/</span></li>
                         {% for breadcrumb in breadcrumbs %}
                             <li>
                                 {% if breadcrumb.path is defined %}
@@ -142,12 +143,6 @@
                         {% endfor %}
                     </ul>
                 {% endif %}
-
-
-                     <!--<li><a href="#">Home</a> <span class="divider">/</span></li>
-                         <li><a href="#">Middle page</a> <span class="divider">/</span></li>
-                         <li><a href="#">Another one</a> <span class="divider">/</span></li>
-                        <li class="active">You are here</li>-->
 
             {% endif %}
 
@@ -182,9 +177,11 @@
             {% block content %}{% endblock %}
         </div>
 
+        {% if show_footer %}
         <footer>
             <p>&copy; Company 2011</p>
         </footer>
+        {% endif %}
 
     </div>
 </body>

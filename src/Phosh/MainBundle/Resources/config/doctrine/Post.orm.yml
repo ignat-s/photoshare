@@ -24,6 +24,9 @@ Phosh\MainBundle\Entity\Post:
     owner:
       type: string
       lenght: 255
+    attachedPhotos:
+      column: attached_photos
+      type: array
     createdAt:
       column: created_at
       type: datetime
@@ -43,4 +46,5 @@ Phosh\MainBundle\Entity\Post:
       nullable: true
 
   lifecycleCallbacks:
-    preUpdate: [ preUpdate ]
+    preUpdate: [ preUpdate, calculateAttachedPhotos ]
+    prePersist: [ calculateAttachedPhotos ]
