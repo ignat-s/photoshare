@@ -33,9 +33,11 @@
         {% endif %}
     </ul>
 
+    <img src="{{ asset('blank.png') }}" width="1" height="1"/>
+
     <!--<button data-controls-modal="modal-from-dom" data-backdrop="true" data-keyboard="true" class="btn danger">Launch Modal</button>-->
 
-    <div style="padding-top: 70px;">{% block content_inner %}{% endblock %}</div>
+    {% block content_inner %}{% endblock %}
 
     {% if post is defined %}
         <div id="modal-delete-post" class="modal hide fade" style="display: none; ">
