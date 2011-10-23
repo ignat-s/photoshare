@@ -46,5 +46,5 @@ Phosh\MainBundle\Entity\Post:
       nullable: true
 
   lifecycleCallbacks:
-    preUpdate: [ preUpdate, calculateAttachedPhotos ]
+    preUpdate: [ calculateAttachedPhotos ]
     prePersist: [ calculateAttachedPhotos ]

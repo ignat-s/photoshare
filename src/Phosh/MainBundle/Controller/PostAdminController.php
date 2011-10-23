@@ -51,6 +51,7 @@ class PostAdminController extends BaseController
     public function createAction()
     {
         $post = new Post();
+        $post->setToken($this->generatePostToken());
         $post->setOwner($this->getCurrentUser()->getUsername());
         $form = $this->createForm(new PostType(), $post);
 
@@ -88,6 +89,9 @@ class PostAdminController extends BaseController
             $form->bindRequest($request);
 
             if ($form->isValid()) {
+                if ($post->isRegenerateToken()) {
+                    $post->setToken($this->generatePostToken());
+                }
                 $this->getEntityManager()->flush();
                 $this->get('session')->setFlash('success', 'Post updated');
                 return $this->redirect($this->generateUrl('post_show', array('id' => $post->getId())));
@@ -119,5 +123,15 @@ class PostAdminController extends BaseController
             $this->get('session')->setFlash('error', $e->getMessage());
             return $this->redirect($this->generateUrl('post_show', array('id' => $post->getId())));
         }
+    }
+
+    public function generatePostToken()
+    {
+        $token = mt_rand(1000000000, 9999999999);
+        $existedPost = $this->getRepository(Post::CLASS_NAME)->findOneByToken($token);
+        if ($existedPost) {
+            return $this->generateRandomToken();
+        }
+        return $token;
     }
 }

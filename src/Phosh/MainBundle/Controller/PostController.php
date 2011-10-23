@@ -11,12 +11,12 @@ use Phosh\MainBundle\Entity\Post;
 use Phosh\MainBundle\Form\Type\PostType;
 
 /**
- * @Route("/posts")
+ * @Route("/{token}", requirements={"token"="\d+"})
  */
 class PostController extends BaseController
 {
     /**
-     * @Route("/{token}.html", name="post_show_by_token", requirements={"_method"="GET", "token" = "[\w\d]+"})
+     * @Route("", name="post_show_by_token", requirements={"_method"="GET"})
      * @ParamConverter("token", class="PhoshMainBundle:Post")
      * @Template()
      */
@@ -31,7 +31,7 @@ class PostController extends BaseController
     }
 
     /**
-     * @Route("/{token}/images/thumb", name="post_image_thumb")
+     * @Route("/i/t", name="post_image_thumb")
      * @ParamConverter("token", class="PhoshMainBundle:Post")
      * @Template()
      */
@@ -54,7 +54,7 @@ class PostController extends BaseController
     }
 
     /**
-     * @Route("/{token}/images/full", name="post_image_full")
+     * @Route("/i/f", name="post_image_full")
      * @ParamConverter("token", class="PhoshMainBundle:Post")
      * @Template()
      */

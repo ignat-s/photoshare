@@ -20,7 +20,6 @@ class Post
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->setToken($this->generateToken());
     }
 
     public function setId($id)
@@ -123,13 +122,6 @@ class Post
         $this->expiredAt = $expiredAt;
     }
 
-    public function preUpdate()
-    {
-        if ($this->isRegenerateToken()) {
-            $this->token = $this->generateToken();
-        }
-    }
-
     public function calculateAttachedPhotos()
     {
         preg_match_all('/<photo\s.*src="([^"]+)".*\/>/i', $this->body, $matches);
@@ -151,24 +143,5 @@ class Post
     public function isExpired()
     {
         return $this->expiredAt <= new \DateTime();
-    }
-
-    private function generateToken()
-    {
-        $bytes = false;
-        if (function_exists('openssl_random_pseudo_bytes') && 0 !== stripos(PHP_OS, 'win')) {
-            $bytes = openssl_random_pseudo_bytes(32, $strong);
-
-            if (true !== $strong) {
-                $bytes = false;
-            }
-        }
-
-        // let's just hope we got a good seed
-        if (false === $bytes) {
-            $bytes = hash('sha256', uniqid(mt_rand(), true), true);
-        }
-
-        return base_convert(bin2hex($bytes), 16, 36);
     }
 }
