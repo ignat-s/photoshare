@@ -1,54 +1,35 @@
 {% extends '::base.html.twig' %}
+{% from 'PhoshMainBundle::tabs.html.twig' import tab, delete_tab %}
 
-{% set page_title = 'Posts' %}
+{% set active_route = app.request.get('_route') %}
+{% set route_titles = {
+    'post_index': 'Posts',
+    'post_create': 'Add post',
+    'post_edit': 'Edit post',
+    'post_show': post is defined ? post.title : '',
+} %}
+{% set page_title = route_titles[active_route] is defined ? route_titles[active_route] : route_titles['post_index'] %}
+
 {% set breadcrumbs = [{ 'name': 'Posts', 'path': path('post_index') }] %}
-{% set route = app.request.get('_route') %}
-
-{% if post is defined and post.id %}
+{% if post is defined %}
     {% set breadcrumbs = breadcrumbs|merge([{ 'name': post.title, 'path': path('post_show', { 'id' : post.id }) }]) %}
 {% endif %}
-
-{% if route == 'post_create' %}
-    {% set page_title = 'Add post' %}
-{% elseif route == 'post_edit' %}
-    {% set page_title = 'Edit post'  %}
-{% elseif route == 'post_delete' %}
-    {% set page_title = 'Delete post' %}
-{% elseif route == 'post_show' %}
-    {% set page_title = post.title %}
-{% endif %}
-
-{% if route not in ['post_index', 'post_show'] %}
+{% if active_route not in ['post_index', 'post_show'] %}
     {% set breadcrumbs = breadcrumbs|merge([{ 'name': page_title, 'path': app.request.basePath }]) %}
 {% endif %}
 
 {% block content %}
+    {% block content_inner %}{% endblock %}
+{% endblock %}
+
+{% block page_actions %}
     <ul class="tabs">
-        <li {% if route == 'post_index'  %}class="active"{% endif %}><a href="{{ path('post_index') }}">List</a></li>
-        <li {% if route == 'post_create' %}class="active"{% endif %}><a href="{{ path('post_create') }}">Add</a></li>
+        {{ tab('List', 'post_index') }}
+        {{ tab('Add', 'post_create') }}
         {% if post is defined and post.id %}
-            <li {% if route == 'post_show'   %}class="active"{% endif %}><a href="{{ path('post_show', {'id': post.id}) }}">Show</a></li>
-            <li {% if route == 'post_edit'   %}class="active"{% endif %}><a href="{{ path('post_edit', {'id': post.id}) }}">Edit</a></li>
-            <li {% if route == 'post_delete' %}class="active"{% endif %}><a href="{{ path('post_delete', {'id': post.id}) }}" data-controls-modal="modal-delete-post" data-backdrop="true">Delete</a></li>
+            {{ tab('Show', 'post_show', {'id': post.id }) }}
+            {{ tab('Edit', 'post_edit', {'id': post.id }) }}
+            {{ delete_tab('Delete', 'post_delete', {'id': post.id }, 'Are you sure you want to delete post?') }}
         {% endif %}
     </ul>
-
-    <img src="{{ asset('blank.png') }}" width="1" height="1"/>
-
-    <!--<button data-controls-modal="modal-from-dom" data-backdrop="true" data-keyboard="true" class="btn danger">Launch Modal</button>-->
-
-    {% block content_inner %}{% endblock %}
-
-    {% if post is defined %}
-        <div id="modal-delete-post" class="modal hide fade" style="display: none; ">
-            <div class="modal-header">
-                <a href="#" class="close">×</a>
-                <h3>Are you sure you want to delete post?</h3>
-            </div>
-            <div class="modal-footer">
-                <a href="#" onclick="$('#modal-delete-post').modal('hide'); return false;" class="btn secondary">No</a>
-                <a href="{{ path('post_delete', {'id': post.id}) }}" class="btn primary">Yes</a>
-            </div>
-        </div>
-    {% endif %}
 {% endblock %}

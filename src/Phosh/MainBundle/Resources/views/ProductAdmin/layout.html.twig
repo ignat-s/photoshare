@@ -1,0 +1,35 @@
+{% extends '::base.html.twig' %}
+{% from 'PhoshMainBundle::tabs.html.twig' import tab, delete_tab %}
+
+{% set active_route = app.request.get('_route') %}
+{% set route_titles = {
+    'product_index': 'Products',
+    'product_create': 'Add product',
+    'product_edit': 'Edit product',
+    'product_show': product is defined ? product.title : '',
+} %}
+{% set page_title = route_titles[active_route] is defined ? route_titles[active_route] : route_titles['product_index'] %}
+
+{% set breadcrumbs = [{ 'name': 'Products', 'path': path('product_index') }] %}
+{% if product is defined %}
+    {% set breadcrumbs = breadcrumbs|merge([{ 'name': product.title, 'path': path('product_show', { 'id' : product.id }) }]) %}
+{% endif %}
+{% if active_route not in ['product_index', 'product_show'] %}
+    {% set breadcrumbs = breadcrumbs|merge([{ 'name': page_title, 'path': app.request.basePath }]) %}
+{% endif %}
+
+{% block content %}
+    {% block content_inner %}{% endblock %}
+{% endblock %}
+
+{% block page_actions %}
+    <ul class="tabs">
+        {{ tab('List', 'product_index') }}
+        {{ tab('Add', 'product_create') }}
+        {% if product is defined and product.id %}
+            {{ tab('Show', 'product_show', {'id': product.id }) }}
+            {{ tab('Edit', 'product_edit', {'id': product.id }) }}
+            {{ delete_tab('Delete', 'product_delete', {'id': product.id }, 'Are you sure you want to delete product?') }}
+        {% endif %}
+    </ul>
+{% endblock %}

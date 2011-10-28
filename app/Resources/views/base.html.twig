@@ -24,7 +24,8 @@
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
     <link rel="stylesheet" href="{{ asset('vendors/bootstrap/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('vendors/colorbox/colorbox.css') }}" />
-    <link rel="stylesheet" href="{{ asset('media/styles.css') }}" />
+    <link rel="stylesheet" href="{{ asset('vendors/jquery.ui/css/ui-lightness/jquery-ui-1.8.16.custom.css') }}" />
+    <link rel="stylesheet" href="{{ asset('app/resources/css/styles.css') }}" />
     <style type="text/css">
         body {
           padding-top: {{ padding_top_px }}/*40px*/; /* 40px to make the container go all the way to the bottom of the topbar */
@@ -34,6 +35,7 @@
     {% block stylesheets %}{% endblock %}
     
     <script src="{{ asset('vendors/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendors/jquery.ui/jquery-ui-1.8.16.custom.min.js') }}"></script>
     <script src="{{ asset('vendors/filetree/jquery.filetree.js') }}"></script>
     <script src="{{ asset('vendors/colorbox/jquery.colorbox-min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('vendors/bootstrap/bootstrap-modal.js') }}"></script>
@@ -45,7 +47,29 @@
     		    maxHeight: '90%'
     		});
     	});
+    	this.App = this.App || {};
+        App.config = {
+            env: "{{ app.environment }}",
+            activeRoute: "{{ app.request.get('_route') }}",
+            routes: {
+
+            }
+        }
     </script>
+
+    <script type="text/javascript" src="{{ asset('vendors/json2.js') }}"></script>
+    {% if app.environment == 'prod' %}
+        <script type="text/javascript" src="{{ asset('vendors/underscore/underscore-min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('vendors/backbone/backbone-min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('vendors/jquery/jquery.tmpl.min.js') }}"></script>
+    {% else %}
+        <script type="text/javascript" src="{{ asset('vendors/underscore/underscore.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('vendors/backbone/backbone.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('vendors/jquery/jquery.tmpl.js') }}"></script>
+    {% endif %}
+    <script type="text/javascript" src="{{ asset('app/core/underscore/extend.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app/core/underscore/templateSettings.js') }}"></script>
+    
     {% block scripts %}{% endblock %}
 </head>
 <body>
@@ -55,9 +79,12 @@
             <div class="container">
                 <a class="brand" href="{{ path('post_index') }}">Project name</a>
                 <ul class="nav">
-                    <li {% if app.request.get('_route') in ['post_index', 'post_show', 'post_create', 'post_edit', 'post_delete'] %}
+                    <li {% if app.request.get('_route') in ['post_index', 'post_show', 'post_create', 'post_edit'] %}
                         class="active"
                     {% endif %}><a href="{{ path('post_index') }}">Posts</a></li>
+                    <li {% if app.request.get('_route') in ['product_index', 'product_show', 'product_create', 'product_edit'] %}
+                        class="active"
+                    {% endif %}><a href="{{ path('product_index') }}">Products</a></li>
                 </ul>
                 <ul class="nav secondary-nav">
                     {% if is_granted('ROLE_USER') %}
@@ -133,6 +160,11 @@
                     {{ app.session.flash('info') }}
                 </div>
             {% endif %}
+
+            {% block page_actions %}
+            {% endblock %}
+
+            <img src="{{ asset('blank.png') }}" width="1" height="1"/>
 
             {% block content %}{% endblock %}
         </div>

@@ -18,6 +18,6 @@
         </ul>
     </div>
 
-    {{ post|post_html|raw }}
+    {% include 'PhoshMainBundle:Post:products.html.twig' with {'post': post } %}
     
 {% endblock %}

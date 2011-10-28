@@ -1,0 +1,59 @@
+{% block scripts %}
+    <script id="productRowTmpl" type="text/template">
+        <tr>
+            <td>{number}</td>
+            <td>{title}</td>
+        </tr>
+    </script>
+    <script type="text/javascript" src="{{ asset('app/app.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app/router/PostEdit.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app/widget/Modal.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app/widget/PostProductsEdit.js') }}"></script>
+    <script type="text/javascript">
+        _.extend(App.config.routes,{
+            product_search: "{{ path('product_search') }}"
+        });
+    </script>
+{% endblock %}
+
+<div id="products">
+    <ul class="tabs">
+        <li class="active">
+            <a href="#">Products</a>
+        </li>
+    </ul>
+    <img src="{{ asset('blank.png') }}"/>
+    <table class="zebra-striped" {% if not post.products|length %} style="display: none;" {% endif %}>
+        <tr>
+            <th style="width: 10px;">#</th>
+            <th>Title</th>
+        </tr>
+        {% for product in post.products %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ product.title }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% if not post.products|length %}
+        <p class="noRecordsFoundMessage">No products found</p>
+    {% endif %}
+    <button class="btn add">Add product</button>
+    <form action="{{ path('post_product_add') }}" class="add" style="display: none;">
+        <fieldset>
+            <legend>Add product</legend>
+            <div class="clearfix">
+                <label class="required" for="productTitle">Product title:</label>
+                <div class="input">
+                    <input type="text" class="xxlarge" name="productTitle" required="required"/>
+                    <input type="hidden" name="productId" />
+                </div>
+            </div>
+            <div class="actions">
+                <input type="submit" value="Submit" class="btn primary submit"/>
+                <input type="reset" value="Cancel" class="btn cancel" />
+            </div>
+        </fieldset>
+        <input type="hidden" name="postId" value="{{ post.id }}"/>
+    </form>
+</div>

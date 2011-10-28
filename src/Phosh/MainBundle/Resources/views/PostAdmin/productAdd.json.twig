@@ -1,0 +1,12 @@
+{%
+    set data = {
+        'success': success,
+        'message': message,
+        'data': {
+            'id' : product.id,
+            'title' : product.title,
+            'description' : product.description
+        }
+    }
+%}
+{{ data|json_encode|raw }}

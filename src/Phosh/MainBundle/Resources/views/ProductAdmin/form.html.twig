@@ -1,0 +1,18 @@
+{% block scripts %}
+    {% include 'PhoshMainBundle::tinymce.html.twig' %}
+{% endblock %}
+
+<form action="{{ path('product_' ~ mode, { 'id': product.id }) }}" method="post" class="form-stacked">
+    {{ form_errors(form) }}
+    <fieldset>
+        {{ form_row(form.title) }}
+        {{ form_row(form.description) }}
+
+        {{ form_rest(form) }}
+
+        <div class="actions">
+            <input type="submit" name="submit" value="Save" class="btn primary"/>
+            <input type="reset" name="submit" value="Reset" class="btn"/>
+        </div>
+    </fieldset>
+</form>

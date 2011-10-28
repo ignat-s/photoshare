@@ -1,0 +1,6 @@
+{% extends 'PhoshMainBundle:PostAdmin:layout.html.twig' %}
+
+{% block content_inner %}
+    {% include 'PhoshMainBundle:PostAdmin:form.html.twig' with {'mode': 'edit'} %}
+    {% include 'PhoshMainBundle:PostAdmin:productsEdit.html.twig' %}
+{% endblock %}

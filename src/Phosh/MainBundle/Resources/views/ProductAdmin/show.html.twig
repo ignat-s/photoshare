@@ -1,0 +1,13 @@
+{% extends 'PhoshMainBundle:ProductAdmin:layout.html.twig' %}
+
+{% block content_inner %}
+
+    <div class="alert-message block-message info">
+        <ul>
+            <li>Created by <strong>{{ product.owner.username }}</strong> at <strong>{{ product.createdAt|date("Y/m/d H:i:s") }}</strong></li>
+        </ul>
+    </div>
+
+    {{ product.description|raw }}
+    
+{% endblock %}

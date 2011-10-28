@@ -1,0 +1,51 @@
+Phosh\MainBundle\Entity\Product:
+  type: entity
+  table: products
+
+  id:
+    id: 
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    title:
+      type: string
+      length: 255
+    description:
+      type: text
+    createdAt:
+      column: created_at
+      type: datetime
+      gedmo:
+        timestampable:
+          on: create
+    updatedAt:
+      column: updated_at
+      nullable: true
+      type: datetime
+      gedmo:
+        timestampable:
+          on: update
+
+  manyToMany:
+    photos:
+      cascade: ["all"]
+      targetEntity: Photo
+      joinTable:
+        name: product_photos
+        joinColumns:
+          product_id:
+            referencedColumnName: id
+            onDelete: "CASCADE"
+        inverseJoinColumns:
+          photo_id:
+            referencedColumnName: id
+            onDelete: "CASCADE"
+
+  manyToOne:
+    owner:
+      targetEntity: User
+      joinColumn:
+        name: owner_id
+        referencedColumnName: id

@@ -1,7 +1,9 @@
 <?php
 
 namespace Phosh\MainBundle\Entity;
- 
+
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Post
 {
     const CLASS_NAME = 'Phosh\MainBundle\Entity\Post';
@@ -15,11 +17,12 @@ class Post
     private $expiredAt;
     private $updatedAt;
     private $regenerateToken = false;
-    private $attachedPhotos = array();
+    private $products;
 
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->products = new ArrayCollection();
     }
 
     public function setId($id)
@@ -52,14 +55,25 @@ class Post
         return $this->body;
     }
 
-    public function getAttachedPhotos()
+    public function getProducts()
     {
-        return $this->attachedPhotos;
+        return $this->products;
     }
 
-    public function hasAttachedPhoto($photo)
+    public function addProduct(Product $product)
     {
-        return in_array($photo, $this->attachedPhotos);
+        $this->products->add($product);
+    }
+
+    public function hasProduct(Product $product)
+    {
+        foreach ($this->products as $actualProduct) {
+            if ($product->equalsTo($actualProduct)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function setCreatedAt(\DateTime $createdAt)
@@ -82,14 +96,9 @@ class Post
         return $this->updatedAt;
     }
 
-    public function setOwner($owner)
+    public function setOwner(User $user)
     {
-        $this->owner = $owner;
-    }
-
-    public function isTest()
-    {
-        return false;
+        $this->owner = $user;
     }
 
     public function getOwner()
@@ -107,6 +116,11 @@ class Post
         return $this->token;
     }
 
+    public function regenerateToken()
+    {
+        $this->setToken(mt_rand(1000000000, 9999999999));
+    }
+
     public function setRegenerateToken($regenerateToken)
     {
         $this->regenerateToken = $regenerateToken;
@@ -120,19 +134,6 @@ class Post
     public function setExpiredAt(\DateTime $expiredAt)
     {
         $this->expiredAt = $expiredAt;
-    }
-
-    public function calculateAttachedPhotos()
-    {
-        preg_match_all('/<photo\s.*src="([^"]+)".*\/>/i', $this->body, $matches);
-        if ($matches) {
-            $this->attachedPhotos = array();
-            foreach ($matches[1] as $photo) {
-                $this->attachedPhotos[] = urldecode($photo);
-            }
-        } else {
-            $this->attachedPhotos = array();
-        }
     }
 
     public function getExpiredAt()

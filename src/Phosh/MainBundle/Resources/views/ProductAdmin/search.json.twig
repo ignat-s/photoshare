@@ -1,0 +1,10 @@
+[
+    {% for product in products %}
+        {{ {
+            'id' : product.id,
+            'label' : product.title,
+            'value' : product.title
+        }|json_encode|raw }}
+        {% if not loop.last %},{% endif %}
+    {% endfor %}
+]

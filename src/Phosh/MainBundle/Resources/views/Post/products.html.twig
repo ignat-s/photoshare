@@ -1,0 +1,6 @@
+{% for product in post.products %}
+    <div class="product">
+        <h2>{{ product.title }}</h2>
+        {{ product.description|raw }}
+    </div>
+{% endfor %}

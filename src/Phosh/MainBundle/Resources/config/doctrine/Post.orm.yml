@@ -21,12 +21,6 @@ Phosh\MainBundle\Entity\Post:
     token:
       type: string
       lenght: 255
-    owner:
-      type: string
-      lenght: 255
-    attachedPhotos:
-      column: attached_photos
-      type: array
     createdAt:
       column: created_at
       type: datetime
@@ -45,6 +39,24 @@ Phosh\MainBundle\Entity\Post:
       type: datetime
       nullable: true
 
-  lifecycleCallbacks:
-    preUpdate: [ calculateAttachedPhotos ]
-    prePersist: [ calculateAttachedPhotos ]
+  manyToOne:
+    owner:
+      targetEntity: User
+      joinColumn:
+        name: owner_id
+        referencedColumnName: id
+
+  manyToMany:
+    products:
+      cascade: ["all"]
+      targetEntity: Product
+      joinTable:
+        name: post_products
+        joinColumns:
+          post_id:
+            referencedColumnName: id
+            onDelete: "CASCADE"
+        inverseJoinColumns:
+          product_id:
+            referencedColumnName: id
+            onDelete: "CASCADE"

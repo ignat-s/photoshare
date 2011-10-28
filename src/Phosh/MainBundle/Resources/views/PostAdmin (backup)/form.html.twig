@@ -1,0 +1,147 @@
+{% extends 'PhoshMainBundle:PostAdmin:layout.html.twig' %}
+
+{% block content_inner %}
+
+    <form action="{{ path('post_' ~ (post.id ? 'edit' : 'create'), { 'id': post.id }) }}" method="post">
+        {{ form_errors(form) }}
+        <fieldset>
+            {{ form_row(form.title) }}
+
+            <div class="clearfix {% if form.body.get('errors')|length %}error{% endif %}">
+                {{ form_label(form.body) }}
+                <div class="input">
+                    <span class="help-inline">Use <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">markdown syntax</a></span>
+                    {{ form_widget(form.body, { 'attr' : {'class' : 'span12', 'style' : 'height: 500px;' } }) }}
+                    {{ form_errors(form.body) }}
+                    <div style="padding-top: 5px;">
+                        <a id="add-image-button" class="btn small primary" href="javascript:void(0);" data-controls-modal="modal-select-image" data-backdrop="true" title="Add image at cursor position">Add Image</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix {% if form.expiredAt.get('errors')|length %}error{% endif %}">
+                {{ form_label(form.expiredAt) }}
+                <div class="input">
+                    {{ form_widget(form.expiredAt.date, { 'attr' : {'placeholder' : 'YYYY/MM/DD', 'class': 'small' } }) }}
+                    {{ form_widget(form.expiredAt.time, { 'attr' : {'placeholder' : 'HH:MM:SS', 'class': 'small' } }) }}
+                    {{ form_errors(form.expiredAt) }}
+                </div>
+            </div>
+
+            <div class="clearfix {% if form.regenerateToken.get('errors')|length %}error{% endif %}" {% if not post.id %} style="display: none;"{% endif %}>
+                {{ form_label(form.regenerateToken) }}
+                <div class="input">
+                    <div class="input-prepend">
+                        {{ form_widget(form.token, { 'attr' : {'class' : 'small'} }) }}
+                        <label class="add-on active">{{ form_widget(form.regenerateToken) }}</label>
+                        {{ form_errors(form.token) }}
+                    </div>
+                </div>
+            </div>
+
+            {{ form_rest(form) }}
+
+            <div class="actions">
+                <input type="submit" name="submit" value="Save" class="btn primary"/>
+                <input type="reset" name="submit" value="Reset" class="btn"/>
+            </div>
+        </fieldset>
+    </form>
+
+    <div id="modal-select-image" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <a href="#" class="close">×</a>
+            <h3>Select image from storage</h3>
+        </div>
+        <div class="modal-body">
+            <div>
+                <div id="fileTree" style="max-height: 200px; overflow: auto;"></div>
+                <div class="preview" style="display: none; height: 170px; padding-top: 5px; overflow: auto;" >
+                    <div class="name" style="clear: both;"></div>
+                    <div class="thumb" style="float: left;"></div>
+                    <div class="rotate" style="float: left; padding-left: 5px;">
+                        <input type="radio" name="rotate" value="" checked="checked"/> don't rotate<br />
+                        <input type="radio" name="rotate" value="90cw"/> 90&deg; clockwise <br />
+                        <input type="radio" name="rotate" value="90ccw"/> 90&deg; counter-clockwise <br />
+                        <input type="radio" name="rotate" value="180"/> 180&deg;
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" onclick="$('#modal-select-image').modal('hide'); return false;" class="btn secondary">Cancel</a>
+            <a class="select-image-button btn success" href="javascript:void(0);" style="display: none;">Select</a>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var selectedImagePath;
+
+            // Handler of image select, called when user double click on image in tree or wher he click Select button
+            var getSelectedImageHtml = function() {
+                var src = '{{ path('filestorage_imagethumb') }}?p=' + selectedImagePath + '&w=150&h=150&r=' + getRotate();
+                var html = '<img class="thumbnail" src="' + src.replace(/"/g, '%22') + '"/>';
+                return html;
+            }
+
+            var getRotate = function() {
+                return rotate = $('#modal-select-image input[name=rotate]:checked').val();
+            }
+
+            var resetRotate = function() {
+                $('#modal-select-image input[name=rotate][value=""]').attr('checked', 'checked');
+            }
+
+            var selectImageHandler = function(file) {
+                var rotate = getRotate();
+                var imageString = '<photo src="' + file.replace(/"/g, '%22') + '"' + (rotate ? ' rotate="' + rotate + '"' : '') + '/>';
+                $('#modal-select-image').modal('hide');
+                $('#phosh_main_post_body').insertAtCaret(imageString);
+            }
+
+            $('#modal-select-image input[name=rotate]').change(function() {
+                $('#modal-select-image .preview .thumb').empty().append(getSelectedImageHtml());
+            })
+
+            // Reset rotating
+            $('#modal-select-image').bind('show', function() {
+                resetRotate();
+            })
+
+            // Init file tree
+            $('#fileTree').filetree({
+                root: '/',
+                script: '{{ path('filestorage_tree') }}',
+                folderEvent: 'dblclick',
+                clickHandler: function (p) {
+                    resetRotate();
+                    $('#modal-select-image .preview .name').empty();
+                    $('#modal-select-image .preview .thumb').empty();
+
+                    if (p.type == 'file' && p.file.split('.').pop().toLowerCase() in { jpg:1, jpeg:1, png:1 }) {
+                        selectedImagePath = p.file;
+                        console.log(selectedImagePath);
+                        $('#modal-select-image .preview').show();
+                        $('#modal-select-image .select-image-button').show();
+                        $('#modal-select-image .preview .name').append(p.file);
+                        $('#modal-select-image .preview .thumb').append(getSelectedImageHtml());
+                    } else {
+                        $('#modal-select-image .select-image-button').hide();
+                        $('#modal-select-image .preview').hide();
+                    }
+
+                    if (p.event.type == 'dblclick' && p.type == 'file') {
+                        selectImageHandler(p.file);
+                    }
+                }
+            });
+
+            //
+            $('#modal-select-image .select-image-button').click(function() {
+                selectImageHandler(selectedImagePath);
+            })
+        });
+    </script>
+
+{% endblock %}

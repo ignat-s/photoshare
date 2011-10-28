@@ -1,0 +1,25 @@
+Phosh\MainBundle\Entity\Photo:
+  type: entity
+  table: photos
+
+  id:
+    id: 
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    rotateAngle:
+      type: integer
+      nullable: true
+    path:
+      type: text
+
+  manyToOne:
+    product:
+      targetEntity: Product
+      inversedBy: photos
+      joinColumn:
+        name: product_id
+        referencedColumnName: id
+        onDelete: "CASCADE"

@@ -16,7 +16,6 @@ class PostType extends AbstractType
                 'class' => 'span12',
             ),
         ))
-        ->add('body', 'textarea', array('label' => 'Body'))
         ->add('expiredAt', 'datetime', array(
             'label' => 'Expired at',
             'years' => range(date('Y'), date('Y') + 1),

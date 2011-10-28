@@ -42,7 +42,7 @@ class PostController extends BaseController
         }
 
         $path = $this->getRequest()->get('p');
-        $this->assertTrue($post->hasAttachedPhoto($path));
+        //$this->assertTrue($post->hasAttachedPhoto($path));
 
         $width = $this->getRequest()->get('h', 640);
         $height = $this->getRequest()->get('w', 640);
@@ -65,7 +65,7 @@ class PostController extends BaseController
         }
 
         $path = $this->getRequest()->get('p');
-        $this->assertTrue($post->hasAttachedPhoto($path));
+        //$this->assertTrue($post->hasAttachedPhoto($path));
 
         $rotateAngle = $this->getPhotoStorage()->decodeRotateAngle($this->getRequest()->get('r'));
 

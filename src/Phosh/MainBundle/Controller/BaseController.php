@@ -18,6 +18,16 @@ class BaseController extends Controller
     }
 
     /**
+     * Shortcut to return the session service.
+     *
+     * @return \Symfony\Component\HttpFoundation\Session
+     */
+    public function getSession()
+    {
+        return $this->get('session');
+    }
+
+    /**
      * @return \Doctrine\ORM\EntityManager
      */
     public function getEntityManager()

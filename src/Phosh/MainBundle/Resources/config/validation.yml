@@ -8,3 +8,12 @@ Phosh\MainBundle\Entity\Post:
       - NotBlank: ~
     expiredAt:
       - NotBlank: ~
+
+Phosh\MainBundle\Entity\Product:
+  properties:
+    title:
+      - NotBlank: ~
+      - MinLength: 3
+      - MaxLength: 255
+    description:
+      - NotBlank: ~

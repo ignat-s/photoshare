@@ -1,16 +1,84 @@
 {% extends 'MopaBootstrapBundle:Form:fields.html.twig' %}
 
-{% block generic_label %}
+{% block password_widget %}
 {% spaceless %}
-    {% if required %}
-        {% set attr = attr|merge({'class': attr.class|default('') ~ ' required'}) %}
-    {% endif %}
-    <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
-    {% set fos_user_label = id|trans([], 'FOSUserBundle') %}
-    {{ id == fos_user_label ? label|trans : fos_user_label }}
-    {% if help_label %}{# TODO erstzten durch function form_help) #}
-        <span class="help-block">{{ help_label|trans }}</span>
-    {% endif %}
-    </label>
+    {% set type = type|default('password') %}
+    {{ block('field_widget') }}
+    <span class="help-inline"><a class="toggler" href="javascript:void(0)">Показать</a></span>
 {% endspaceless %}
-{% endblock %}
+{% endblock password_widget %}
+
+{% block choice_widget %}
+{% spaceless %}
+    {% if expanded %}
+    <div class="clearfix">
+    	{{ form_label(form, label) }}
+			<div class="input">
+			{% set attr = attr|merge({'class': attr.class|default('') ~ ' inputs-list'}) %}
+        	<ul {{ block('widget_container_attributes') }}>
+	        {% for child in form %}
+                <li>
+                	<label>
+		            	{{ form_widget(child) }}&nbsp;
+		            	<span>{{ child.get('label') }}</span>
+	                </label>
+                </li>
+	        {% endfor %}
+			</ul>
+		</div>
+	</div>
+    {% else %}
+   <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+        {% if empty_value is not none %}
+            <option value="">{{ empty_value|trans }}</option>
+        {% endif %}
+        {% if preferred_choices|length > 0 %}
+            {% set options = preferred_choices %}
+            {{ block('widget_choice_options') }}
+            {% if choices|length > 0 %}
+                <option disabled="disabled">{{ separator }}</option>
+            {% endif %}
+        {% endif %}
+        {% set options = choices %}
+        {{ block('widget_choice_options') }}
+    </select>
+    {% endif %}
+{% endspaceless %}
+{% endblock choice_widget %}
+
+{% block datetime_widget %}
+{% spaceless %}
+    {% if widget == 'single_text' %}
+        {{ block('field_widget') }}
+    {% else %}
+    <div class="clearfix {% if errors|length > 0 %}error{% endif %}">
+    	{{ form_label(form, label) }}
+        <div class="input">
+            {% set attr = attr|merge({'class': attr.class|default('') ~ ' inline-inputs'}) %}
+            <div {{ block('widget_container_attributes') }}>
+	            {{ form_errors(form.date) }}
+	            {{ form_errors(form.time) }}
+	            {{ form_widget(form.date, {'attr': {'class': 'small', 'placeholder': 'гггг/мм/дд'} }) }}&nbsp;
+	            {{ form_widget(form.time, {'attr': {'class': 'mini', 'placeholder': 'чч:мм:сс'} } ) }}
+	        </div>
+	        {{ block('help') }}
+        </div>
+    </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock datetime_widget %}
+
+{% block form_errors %}
+{% spaceless %}
+    {% if errors|length %}
+    <div class="alert-message warning" data-alert="alert">
+        <a class="close" href="#">×</a>
+        {% for error in errors %}
+            {{ error.messageTemplate|trans(error.messageParameters, 'validators') }}<br/>
+        {% endfor %}
+        <p>
+        </p>
+    </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_errors %}
