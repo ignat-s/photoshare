@@ -1,11 +1,11 @@
 _.namespace('App.router.PostEdit');
 
-App.router.PostEdit = Backbone.Router.extend({
-			postProductsEditWidget : null,
+App.router.PostAdmin = Backbone.Router.extend({
+			postProductsAdminWidget : null,
 			initialize : function(options) {
 				var me = this;
 
-                me.postProductsEditWidget = new App.widget.PostProductsEdit({
+                me.postProductsAdminWidget = new App.widget.PostProductsAdmin({
                     productSearchUrl: options.productSearchUrl
                 });
 

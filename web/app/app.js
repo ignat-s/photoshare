@@ -23,7 +23,7 @@ $(function() {
      */
     switch (App.config.activeRoute) {
         case 'post_create': case 'post_edit' :
-            new App.router.PostEdit({
+            new App.router.PostAdmin({
                 productSearchUrl: App.config.routes.product_search
             });
             break;

@@ -1,6 +1,6 @@
-_.namespace('App.widget.tender.PostProductsEdit');
+_.namespace('App.widget.tender.PostProductsAdmin');
 
-App.widget.PostProductsEdit = Backbone.View.extend({
+App.widget.PostProductsAdmin = Backbone.View.extend({
     el : '#productsAdminPanel',
     recordsEl : '#productsAdminPanel .records',
     recordTemplate : _.template($('#productRowTmpl').html()),

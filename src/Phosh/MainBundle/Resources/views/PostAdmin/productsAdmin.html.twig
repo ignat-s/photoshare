@@ -12,9 +12,9 @@
         </div>
     </script>
     <script type="text/javascript" src="{{ asset('app/app.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('app/router/PostEdit.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app/router/PostAdmin.js') }}"></script>
     <script type="text/javascript" src="{{ asset('app/widget/Modal.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('app/widget/PostProductsEdit.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app/widget/PostProductsAdmin.js') }}"></script>
     <script type="text/javascript">
         _.extend(App.config.routes,{
             product_search: "{{ path('product_search', post.id ? {'ignorePostProducts': post.id} : {'ignoreRememberedProducts': 1}) }}"
