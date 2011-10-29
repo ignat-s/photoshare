@@ -1,9 +1,15 @@
 {% block scripts %}
     <script id="productRowTmpl" type="text/template">
-        <tr>
-            <td>{number}</td>
-            <td>{title}</td>
-        </tr>
+        <div class="record" data-product-id="{id}">
+            <h2 class="title">{title}</h2>
+            <div class="description">
+                {description}
+            </div>
+            <div class="well">
+                <a href="{{ path('product_show', {'id': 0}) }}" class="btn details" title="Open product details page in this window" >Details page</a>
+                <a href="{{ path('post_product_remove', {'id': post.id ? post.id : 0, 'productId': 0}) }}" title="Remove this product from post" class="btn danger remove">Remove</a>
+            </div>
+        </div>
     </script>
     <script type="text/javascript" src="{{ asset('app/app.js') }}"></script>
     <script type="text/javascript" src="{{ asset('app/router/PostEdit.js') }}"></script>
@@ -11,7 +17,7 @@
     <script type="text/javascript" src="{{ asset('app/widget/PostProductsEdit.js') }}"></script>
     <script type="text/javascript">
         _.extend(App.config.routes,{
-            product_search: "{{ path('product_search') }}"
+            product_search: "{{ path('product_search', post.id ? {'ignorePostProducts': post.id} : {'ignoreRememberedProducts': 1}) }}"
         });
     </script>
 {% endblock %}
@@ -23,37 +29,42 @@
         </li>
     </ul>
     <img src="{{ asset('blank.png') }}"/>
-    <table class="zebra-striped" {% if not post.products|length %} style="display: none;" {% endif %}>
-        <tr>
-            <th style="width: 10px;">#</th>
-            <th>Title</th>
-        </tr>
+    <div id="productsAdminPanel">
+        <div class="records">
         {% for product in post.products %}
-            <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ product.title }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-    {% if not post.products|length %}
-        <p class="noRecordsFoundMessage">No products found</p>
-    {% endif %}
-    <button class="btn add">Add product</button>
-    <form action="{{ path('post_product_add') }}" class="add" style="display: none;">
-        <fieldset>
-            <legend>Add product</legend>
-            <div class="clearfix">
-                <label class="required" for="productTitle">Product title:</label>
-                <div class="input">
-                    <input type="text" class="xxlarge" name="productTitle" required="required"/>
-                    <input type="hidden" name="productId" />
+            <div class="record" data-product-id="{{ product.id }}">
+                <h2 class="title">{{ product.title }}</h2>
+                <div class="description">
+                    {{ product.description|raw }}
+                </div>
+                <div class="well">
+                    <a href="{{ path('product_show', {'id': product.id}) }}" class="btn" title="Open product details page in this window" >Details page</a>
+                    <a href="{{ path('post_product_remove', {'id': post.id, 'productId': product.id}) }}" title="Remove this product from post" value="remove" class="btn danger remove">Remove</a>
                 </div>
             </div>
-            <div class="actions">
-                <input type="submit" value="Submit" class="btn primary submit"/>
-                <input type="reset" value="Cancel" class="btn cancel" />
-            </div>
-        </fieldset>
-        <input type="hidden" name="postId" value="{{ post.id }}"/>
-    </form>
+        {% endfor %}
+        </div>
+        <p class="noRecordsFoundMessage" {% if post.products|length %}style="display: none;"{% endif %}>No products found</p>
+
+        <button class="btn add">Add product</button>
+        <form action="{{ path('post_product_add') }}" class="add" style="display: none;">
+            <fieldset>
+                <legend>Search product</legend>
+                <div class="clearfix">
+                    <label class="required" for="productTitle">Product title:</label>
+                    <div class="input">
+                        <input type="text" class="xxlarge" name="productTitle" id="productTitle" required="required"/>
+                        <input type="hidden" name="productId" />
+                    </div>
+                </div>
+                <div class="actions">
+                    <input type="submit" value="Add product" class="btn primary submit"/>
+                    <input type="reset" value="Cancel" class="btn cancel" />
+                </div>
+            </fieldset>
+            <input type="hidden" name="postId" value="{{ post.id }}"/>
+        </form>
+    </div>
+
+
 </div>

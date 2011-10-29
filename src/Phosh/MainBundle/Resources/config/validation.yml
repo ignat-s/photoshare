@@ -4,8 +4,6 @@ Phosh\MainBundle\Entity\Post:
       - NotBlank: ~
       - MinLength: 3
       - MaxLength: 255
-    body:
-      - NotBlank: ~
     expiredAt:
       - NotBlank: ~
 

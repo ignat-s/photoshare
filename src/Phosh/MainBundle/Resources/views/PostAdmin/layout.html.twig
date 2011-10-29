@@ -11,7 +11,7 @@
 {% set page_title = route_titles[active_route] is defined ? route_titles[active_route] : route_titles['post_index'] %}
 
 {% set breadcrumbs = [{ 'name': 'Posts', 'path': path('post_index') }] %}
-{% if post is defined %}
+{% if post is defined and post.id %}
     {% set breadcrumbs = breadcrumbs|merge([{ 'name': post.title, 'path': path('post_show', { 'id' : post.id }) }]) %}
 {% endif %}
 {% if active_route not in ['post_index', 'post_show'] %}

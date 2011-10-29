@@ -22,7 +22,7 @@ $(function() {
      * init Server time
      */
     switch (App.config.activeRoute) {
-        case 'post_edit' :
+        case 'post_create': case 'post_edit' :
             new App.router.PostEdit({
                 productSearchUrl: App.config.routes.product_search
             });

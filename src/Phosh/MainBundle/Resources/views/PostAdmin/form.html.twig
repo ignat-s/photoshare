@@ -6,7 +6,7 @@
         <div class="clearfix {% if form.expiredAt.get('errors')|length %}error{% endif %}">
             {{ form_label(form.expiredAt) }}
             <div class="input">
-                {{ form_widget(form.expiredAt.date, { 'attr' : {'placeholder' : 'YYYY/MM/DD', 'class': 'small' } }) }}
+                {{ form_widget(form.expiredAt.date, { 'attr' : {'placeholder' : 'YYYY/MM/DD', 'class': 'small datepicker' } }) }}
                 {{ form_widget(form.expiredAt.time, { 'attr' : {'placeholder' : 'HH:MM:SS', 'class': 'small' } }) }}
                 {{ form_errors(form.expiredAt) }}
             </div>

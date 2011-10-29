@@ -1,0 +1,7 @@
+{%
+    set data = {
+        'success': success,
+        'message': message
+    }
+%}
+{{ data|json_encode|raw }}

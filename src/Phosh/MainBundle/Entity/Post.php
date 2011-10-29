@@ -76,6 +76,11 @@ class Post
         return false;
     }
 
+    public function removeProduct(Product $product)
+    {
+        $this->products->removeElement($product);
+    }
+
     public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;

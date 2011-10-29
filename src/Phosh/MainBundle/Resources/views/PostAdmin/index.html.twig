@@ -6,19 +6,19 @@
         <table class="zebra-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Title</th>
                     <th>URL</th>
+                    <th>Created at</th>
                 </tr>
             </thead>
             {% for post in posts %}
                 <tr>
-                    <td>{{ post.id }}</td>
                     <td><a href="{{ path('post_show', {'id': post.id}) }}">{{ post.title }}</a></td>
                     <td>
                         {% if post.expired %}<span class="label important">expired</span>{% else %}<span class="label success">active</span>{% endif %}
                         <a href="{{ path('post_show_by_token', { 'token': post.token }) }}">{{ url('post_show_by_token', { 'token': post.token }) }}</a>
                     </td>
+                    <td>{{ post.createdAt|date('Y/m/d H:i:s') }}</td>
                 </tr>
             {% endfor %}
         </table>

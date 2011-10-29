@@ -24,7 +24,7 @@
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
     <link rel="stylesheet" href="{{ asset('vendors/bootstrap/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('vendors/colorbox/colorbox.css') }}" />
-    <link rel="stylesheet" href="{{ asset('vendors/jquery.ui/css/ui-lightness/jquery-ui-1.8.16.custom.css') }}" />
+    <link rel="stylesheet" href="{{ asset('vendors/jquery.ui/css/redmond/jquery-ui-1.8.16.custom.css') }}" />
     <link rel="stylesheet" href="{{ asset('app/resources/css/styles.css') }}" />
     <style type="text/css">
         body {
@@ -46,6 +46,11 @@
     		    maxWidth: '90%',
     		    maxHeight: '90%'
     		});
+    		$(function() {
+                $( "input.datepicker" ).datepicker({
+                    'dateFormat' : 'yy/mm/dd'
+                });
+            });
     	});
     	this.App = this.App || {};
         App.config = {

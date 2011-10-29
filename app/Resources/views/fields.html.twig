@@ -58,7 +58,7 @@
             <div {{ block('widget_container_attributes') }}>
 	            {{ form_errors(form.date) }}
 	            {{ form_errors(form.time) }}
-	            {{ form_widget(form.date, {'attr': {'class': 'small', 'placeholder': 'гггг/мм/дд'} }) }}&nbsp;
+	            {{ form_widget(form.date, {'attr': {'class': 'small datepicker', 'placeholder': 'гггг/мм/дд'} }) }}&nbsp;
 	            {{ form_widget(form.time, {'attr': {'class': 'mini', 'placeholder': 'чч:мм:сс'} } ) }}
 	        </div>
 	        {{ block('help') }}

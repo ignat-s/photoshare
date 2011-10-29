@@ -8,7 +8,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 use Phosh\MainBundle\Entity\Product;
+use Phosh\MainBundle\Entity\Post;
 use Phosh\MainBundle\Form\Type\ProductType;
+use Phosh\MainBundle\Pager\Pager;
 
 /**
  * @Route("/admin/products")
@@ -22,14 +24,25 @@ class ProductAdminController extends BaseController
      */
     public function indexAction()
     {
-        $products = $this->getEntityManager()->createQueryBuilder()
-                ->select('product')
-                ->from('PhoshMainBundle:Product', 'product')
+        $pager = $this->createPager();
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+                ->from('PhoshMainBundle:Product', 'product');
+
+        $select = clone $queryBuilder;
+        $select->select('product')
                 ->orderBy('product.title', 'ASC')
-                ->getQuery()->execute();
+                ->setFirstResult($pager->getOffset())
+                ->setMaxResults($pager->getPerPage());
+        $totalCount = clone $queryBuilder;
+        $totalCount->select('count(product.id)');
+
+        $products = $select->getQuery()->execute();
+        $pager->setCount($totalCount->getQuery()->getSingleScalarResult());
 
         return array(
             'products' => $products,
+            'pager' => $pager,
         );
     }
 
@@ -128,17 +141,53 @@ class ProductAdminController extends BaseController
     public function searchAction()
     {
         $term = $this->getRequest()->get('term');
+        $ignorePostProducts = $this->getRequest()->get('ignorePostProducts');
+        $ignoreRememberedProducts = $this->getRequest()->get('ignoreRememberedProducts');
 
-        $products = $this->getEntityManager()->createQueryBuilder()
+        $qb = $this->getEntityManager()->createQueryBuilder()
                 ->select('product')
                 ->from('PhoshMainBundle:Product', 'product')
-                ->where('lower(product.title) like :titleMask')
-                ->orderBy('product.title', 'ASC')
+                ->where('lower(product.title) like :titleMask');
+
+        if ($ignorePostProducts) {
+            $qb->andWhere($qb->expr()->notIn('product.id', $this->findPostProductIds($ignorePostProducts)));
+        }
+
+        if ($ignoreRememberedProducts) {
+            $rememberedProductIds = array_keys($this->getSessionArrayValue('remembered_products'));
+            if ($rememberedProductIds) {
+                $qb->andWhere($qb->expr()->notIn('product.id', $rememberedProductIds));
+            }
+        }
+
+        $products = $qb->orderBy('product.title', 'ASC')
                 ->setParameter('titleMask', \mb_strtolower(sprintf('%%%s%%', $term)))
                 ->getQuery()->execute();
 
         return array(
             'products' => $products,
         );
+    }
+
+    /**
+     * @param $postId
+     * @return \Phosh\MainBundle\Entity\Product[]
+     */
+    private function findPostProductIds($postId)
+    {
+        $queryResult = $this->getEntityManager()->createQueryBuilder()
+                ->select('product.id')
+                ->from('PhoshMainBundle:Post', 'post')
+                ->leftJoin('post.products', 'product')
+                ->where('post.id = :postId')
+                ->setParameter('postId', $postId)
+                ->getQuery()->getScalarResult();
+
+        $result = array();
+        foreach ($queryResult as $row) {
+            $result[] = $row['id'];
+        }
+
+        return $result;
     }
 }

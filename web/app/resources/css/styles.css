@@ -85,3 +85,10 @@ footer {
     padding-top: 7px;
     border-top: none;
 }
+
+/**
+ * Conflicts with jQuery UI Datepicker, when z-index is set to 2
+ */
+.input-prepend .add-on, .input-append .add-on {
+    z-index: 0;
+}

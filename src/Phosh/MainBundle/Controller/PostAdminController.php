@@ -55,15 +55,16 @@ class PostAdminController extends BaseController
         $post = new Post();
         $this->makeUniquePostToken($post);
         $post->setOwner($this->getCurrentUser());
-        $form = $this->createForm(new PostType(), $post);
+
 
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
+            $this->addRememberedPostProducts($post);
+            $form = $this->createForm(new PostType(), $post);
             $form->bindRequest($request);
 
             if ($form->isValid()) {
                 $this->getEntityManager()->persist($post);
-                $this->addRememberedPostProducts($post);
                 $this->getEntityManager()->flush();
                 $this->get('session')->setFlash('success', 'Post added');
                 return $this->redirect($this->generateUrl('post_show', array('id' => $post->getId())));
@@ -71,7 +72,11 @@ class PostAdminController extends BaseController
                 $this->get('session')->setFlash('error', 'Post saving error');
             }
         } else {
+            $now = new \DateTime();
+            $now->modify(sprintf('+1 day -%d minute - %d second', $now->format('i'), $now->format('s')));
+            $post->setExpiredAt($now);
             $this->resetRememberedPostProducts();
+            $form = $this->createForm(new PostType(), $post);
         }
 
         return array(
@@ -140,9 +145,9 @@ class PostAdminController extends BaseController
         $product = $this->findProduct($productId);
         $this->assertNotNull($product);
 
-        $postId = $this->getRequest()->get('productId');
+        $postId = $this->getRequest()->get('postId');
         if ($postId) {
-            $post = $this->findPost($productId);
+            $post = $this->findPost($postId);
             $this->assertNotNull($post);
             if ($post->hasProduct($product)) {
                 $success = false;
@@ -155,7 +160,7 @@ class PostAdminController extends BaseController
                 $message = 'Product added';
             }
         } else {
-            $this->rememberToAddPostProduct($product);
+            $this->setRememberToAddPostProduct($product);
             $success = true;
             $message = 'Product added';
         }
@@ -164,6 +169,38 @@ class PostAdminController extends BaseController
             'success' => $success,
             'message' => $message,
             'product' => $product
+        );
+    }
+
+    /**
+     * @Route("/{id}/product_remove/{productId}", name="post_product_remove", requirements={"id" = "\d+", "productId" = "\d+"})
+     * @ParamConverter("id", class="PhoshMainBundle:Post")
+     * @Template()
+     */
+    public function productRemoveAction($id, $productId)
+    {
+        $product = $this->findProduct($productId);
+        $this->assertNotNull($product);
+
+        if ($id) {
+            $post = $this->findPost($id);
+            $this->assertNotNull($post);
+
+            $this->assertTrue($post->hasProduct($product));
+
+            $post->removeProduct($product);
+
+            $this->getEntityManager()->flush();
+        } else {
+            $this->unsetRememberToAddPostProduct($product);
+        }
+
+        $success = true;
+        $message = 'Product removed';
+
+        return array(
+            'success' => $success,
+            'message' => $message
         );
     }
 
@@ -176,36 +213,37 @@ class PostAdminController extends BaseController
         }
     }
 
-    private function rememberToAddPostProduct(Product $product)
+    private function setRememberToAddPostProduct(Product $product)
     {
-        $attrName = 'add_products';
-        if (!$this->getSession()->has($attrName) || !is_array($this->getSession()->get($attrName))) {
-            $this->getSession()->set($attrName, array());
-        }
-
-        $attrValue = $this->getSession()->get($attrName);
+        $attrName = 'remembered_products';
+        $attrValue = $this->getSessionArrayValue($attrName);
         $attrValue[$product->getId()] = true;
-        $this->getSession()->set($attrName, $attrValue);
+        $this->setSessionValue($attrName, $attrValue);
+    }
+
+    private function unsetRememberToAddPostProduct(Product $product)
+    {
+        $attrName = 'remembered_products';
+        $attrValue = $this->getSessionArrayValue($attrName);
+        unset($attrValue[$product->getId()]);
+        $this->setSessionValue($attrName, $attrValue);
     }
 
     private function addRememberedPostProducts(Post $post)
     {
-        $attrName = 'add_products';
-        $attrValue = $this->getSession()->get($attrName);
-        if ($attrValue || is_array($attrValue)) {
-            foreach (array_keys($attrValue) as $productId) {
-                $product = $this->findProduct($productId);
-                if ($product) {
-                    $post->addProduct($product);
-                }
+        $attrName = 'remembered_products';
+        foreach (array_keys($this->getSessionArrayValue($attrName)) as $productId) {
+            $product = $this->findProduct($productId);
+            if ($product) {
+                $post->addProduct($product);
             }
         }
     }
 
     private function resetRememberedPostProducts()
     {
-        $attrName = 'add_products';
-        $this->getSession()->remove($attrName);
+        $attrName = 'remembered_products';
+        $this->removeSessionValue($attrName);
     }
 
     /**

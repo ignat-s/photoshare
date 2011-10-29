@@ -1,0 +1,17 @@
+{% if pager.pagesCount > 1 %}
+    <div class="pagination">
+        <ul>
+            <li class="prev {% if pager.isFirstPage %}disabled{% endif %}">
+                <a {% if pager.isFirstPage %}href="#" onclick="return false;"{% else %}href="?p={{ pager.page - 1 }}"{% endif %}>Previous</a>
+            </li>
+            {% for page in range(0, pager.pagesCount - 1) %}
+                <li {% if pager.page == page %}class="active"{% endif %}>
+                    <a href="?p={{ page }}">{{ page + 1 }}</a>
+                </li>
+            {% endfor %}
+            <li class="next {% if pager.isLastPage %}disabled{% endif %}">
+                <a {% if pager.isLastPage %}href="#" onclick="return false;"{% else %}href="?p={{ pager.page + 1 }}"{% endif %}>Next</a>
+            </li>
+        </ul>
+    </div>
+{% endif %}

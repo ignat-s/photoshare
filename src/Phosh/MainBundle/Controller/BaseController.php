@@ -5,8 +5,18 @@ namespace Phosh\MainBundle\Controller;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Phosh\MainBundle\Pager\Pager;
+
 class BaseController extends Controller
 {
+    /**
+     * @return \Phosh\MainBundle\Pager\Pager
+     */
+    public function createPager()
+    {
+        return new Pager($this->getRequest()->get('p', 0), $this->getRequest()->get('pp', 100));
+    }
+
     /**
      * Shortcut to return the request service.
      *
@@ -94,5 +104,23 @@ class BaseController extends Controller
     protected function fail($errorMessage = null, $errorCode = 404)
     {
         throw new HttpException($errorCode, $errorMessage);
+    }
+
+    protected function getSessionArrayValue($attrName)
+    {
+        if (!$this->getSession()->has($attrName) || !is_array($this->getSession()->get($attrName))) {
+            $this->getSession()->set($attrName, array());
+        }
+        return $this->getSession()->get($attrName);
+    }
+
+    protected function setSessionValue($attrName, $attrValue)
+    {
+        return $this->getSession()->set($attrName, $attrValue);
+    }
+
+    protected function removeSessionValue($attrName)
+    {
+        return $this->getSession()->remove($attrName);
     }
 }

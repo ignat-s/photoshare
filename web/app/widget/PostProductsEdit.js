@@ -1,22 +1,22 @@
 _.namespace('App.widget.tender.PostProductsEdit');
 
 App.widget.PostProductsEdit = Backbone.View.extend({
-    el : '#products',
-    productRowTemplate : _.template($('#productRowTmpl').html()),
-    noRecordsFoundMessageEl : '#products .noRecordsFoundMessage',
-    productsTableEl : '#products table',
-    productNameEl: '#products form.add input[name=productTitle]',
-    productIdEl: '#products form.add input[name=productId]',
-    postIdEl: '#products form.add input[name=postId]',
-    addFormEl : '#products form.add',
-    addButtonEl : '#products button.add',
+    el : '#productsAdminPanel',
+    recordsEl : '#productsAdminPanel .records',
+    recordTemplate : _.template($('#productRowTmpl').html()),
+    noRecordsFoundMessageEl : '#productsAdminPanel .noRecordsFoundMessage',
+    productTitleEl: '#productsAdminPanel form.add input[name=productTitle]',
+    productIdEl: '#productsAdminPanel form.add input[name=productId]',
+    postIdEl: '#productsAdminPanel form.add input[name=postId]',
+    addFormEl : '#productsAdminPanel form.add',
+    addButtonEl : '#productsAdminPanel button.add',
     addForm: null,
     initialize: function(options) {
         var me;
 
         me = this;
 
-        $(me.productNameEl).autocomplete({
+        $(me.productTitleEl).autocomplete({
             source: options.productSearchUrl,
             change: function(event, ui) {
                 me.onChangeProduct(ui.item ? ui.item.id : null);
@@ -25,11 +25,15 @@ App.widget.PostProductsEdit = Backbone.View.extend({
                 me.onChangeProduct(ui.item ? ui.item.id : null);
             }
         });
+
+        $('.record', me.el).each(function() {
+            me.bindProductEvents(this);
+        });
     },
     events : {
-        'click .btn.add' : 'showAddForm',
-        'click .btn.cancel' : 'hideAddForm',
-        'submit form.add' : 'onSubmitAddForm'
+        'click .btn.add': 'showAddForm',
+        'click .btn.cancel': 'hideAddForm',
+        'submit form.add': 'onSubmitAddForm'
     },
     onChangeProduct: function(productId) {
         var me;
@@ -38,7 +42,7 @@ App.widget.PostProductsEdit = Backbone.View.extend({
 
         $(me.productIdEl).val(productId);
     },
-    showAddForm: function(e) {
+    showAddForm: function() {
         var me;
 
         me = this;
@@ -59,16 +63,74 @@ App.widget.PostProductsEdit = Backbone.View.extend({
 
         return false;
     },
-    onSubmitAddForm: function(e) {
+    bindProductEvents: function(productEl) {
+        var me, productId, removeUrl;
+
+        me = this;
+        productId = $(productEl).attr('data-product-id');
+
+        $('.btn.remove', productEl).click(function() {
+            removeUrl = $(this).attr('href');
+            me.showRemoveProduct(productEl, removeUrl);
+
+            return false;
+        });
+    },
+    showRemoveProduct: function(productEl, removeUrl) {
+        var me;
+
+        me = this;
+
+        new App.widget.Modal({
+            title: 'Remove product from post?',
+            callback: function() {
+                $(productEl).css('opacity', .5);
+                $('.btn.remove', productEl).attr('disabled', 'disabled');
+                var success = false;
+                $.ajax({
+                    scope: me,
+                    url: removeUrl,
+                    complete: function() {
+                        $(productEl).removeClass('removing');
+                        $(productEl).css('opacity', 1);
+                        $('.btn.remove', productEl).removeAttr('disabled');
+                    },
+                    success: function(responseData, textStatus, jqXHR) {
+                        if (responseData.success) {
+
+                            $(productEl).slideUp('fast', function() {
+                                $(productEl).remove();
+                                if (!$('.record', me.el).length) {
+                                    $(me.noRecordsFoundMessageEl).show();
+                                }
+                            });
+                            success = true;
+                        } else {
+                            App.alert(responseData.message);
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        var responseData = App.parseJSON(jqXHR.responseText);
+                        App.alert(responseData.message ? responseData.message : 'Request error: ' + errorThrown);
+                    },
+                    type: 'POST',
+                    dataType: 'json'
+                });
+            }
+        })
+
+        return false;
+    },
+    onSubmitAddForm: function() {
         var me, formData, url;
 
         me = this;
-        formData = me.getFormData();
+        formData = me.getAddFormData();
         url = $(me.addFormEl).attr('action');
 
         if (formData.productId) {
-           $('input, submit, reset', me.addFormEl).attr('disabled', 'disabled');
-           $.ajax({
+            $('input, submit, reset', me.addFormEl).attr('disabled', 'disabled');
+            $.ajax({
                 scope: me,
                 url: url,
                 complete: function() {
@@ -77,6 +139,7 @@ App.widget.PostProductsEdit = Backbone.View.extend({
                 success: function(responseData, textStatus, jqXHR) {
                     if (responseData.success) {
                         me.addProduct(responseData.data);
+                        me.resetAddFormData();
                     } else {
                         App.alert(responseData.message);
                     }
@@ -94,33 +157,39 @@ App.widget.PostProductsEdit = Backbone.View.extend({
         return false;
     },
     addProduct: function(productData) {
-        var me, row;
+        var me, row, productEl, detailsUrl, removeUrl;
 
         me = this;
-        row = _.extend(productData, {
-            number: $('tbody tr', me.productsTableEl).length
-        });
+        row = _.extend(productData, {});
 
-        if ($(me.productsTableEl).is(":hidden")) {
-            $(me.productsTableEl).show();
-            $(me.noRecordsFoundMessageEl).hide();
-        }
+        $(me.noRecordsFoundMessageEl).hide();
 
-        $('tbody', me.productsTableEl).append(
-                me.productRowTemplate(row)
-        );
+        productEl = $(me.recordTemplate(row)).appendTo(me.recordsEl).hide().slideDown('fast');
+        me.bindProductEvents(productEl);
 
-        console.log(productData);
+        detailsUrl = $('a.btn.details',productEl).attr('href').replace(/\/0$/, '/' + productData.id);
+        $('a.btn.details',productEl).attr('href', detailsUrl);
+
+        removeUrl = $('a.btn.remove', productEl).attr('href').replace(/\/0$/, '/' + productData.id);
+        $('a.btn.remove', productEl).attr('href', removeUrl);
     },
-    getFormData: function() {
+    getAddFormData: function() {
         var me;
 
         me = this;
-        
+
         return {
             productId : $(me.productIdEl).val(),
             postId : $(me.postIdEl).val()
         }
+    },
+    resetAddFormData: function() {
+        var me;
+
+        me = this;
+
+        $(me.productIdEl).val('')
+        $(me.productTitleEl).val('');
     }
 
 });
