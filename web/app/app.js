@@ -1,6 +1,5 @@
 $(function() {
-    $('.toggle.btn').toggleBtn();
-    $('.radio .btn').radio();
+
     $("input.datepicker").datepicker({
         'dateFormat' : 'yy/mm/dd'
     });

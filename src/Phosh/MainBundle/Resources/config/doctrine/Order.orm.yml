@@ -1,0 +1,48 @@
+Phosh\MainBundle\Entity\Order:
+  type: entity
+  table: orders
+  
+  id:
+    id: 
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    customer:
+      type: string
+      length: 255
+    contact:
+      type: text
+      nullable: true
+    comment:
+      type: text
+      nullable: true
+    createdAt:
+      column: created_at
+      type: datetime
+      gedmo:
+        timestampable:
+          on: create
+
+  manyToOne:
+    post:
+      targetEntity: Post
+      joinColumn:
+        name: post_id
+        referencedColumnName: id
+
+  manyToMany:
+    products:
+      cascade: ["all"]
+      targetEntity: Product
+      joinTable:
+        name: order_products
+        joinColumns:
+          post_id:
+            referencedColumnName: id
+            onDelete: "CASCADE"
+        inverseJoinColumns:
+          product_id:
+            referencedColumnName: id
+            onDelete: "CASCADE"

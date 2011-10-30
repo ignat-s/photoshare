@@ -8,8 +8,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 use Phosh\MainBundle\Entity\Post;
+use Phosh\MainBundle\Entity\Order;
 use Phosh\MainBundle\Entity\Photo;
-use Phosh\MainBundle\Form\Type\PostType;
+use Phosh\MainBundle\Form\Type\OrderType;
 
 /**
  * @Route("/{token}", requirements={"token"="\d+"})
@@ -26,8 +27,17 @@ class PostController extends BaseController
         if (!$this->isGranted('ROLE_ADMIN')) {
             $this->assertFalse($post->isExpired());
         }
+
+        $order = new Order($post);
+        $order->setCustomer($this->getSessionValue('last_order_customer'));
+        $order->setComment($this->getSessionValue('last_order_comment'));
+        $order->setContact($this->getSessionValue('last_order_contact'));
+
+        $form = $this->createForm(new OrderType(), $order);
+
         return array(
             'post' => $post,
+            'orderForm' => $form->createView(),
         );
     }
 

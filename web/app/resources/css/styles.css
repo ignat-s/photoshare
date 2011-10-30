@@ -86,6 +86,10 @@ footer {
     border-top: none;
 }
 
+.form-stacked label {
+    font-weight: normal;
+}
+
 /**
  * Conflicts with jQuery UI Datepicker, when z-index is set to 2
  */
@@ -97,6 +101,9 @@ footer {
     margin-left: 0px;
 }
 
+/**
+ * Styling photos add dialog
+ */
 #addPhotoDialog .preview .media-grid a {
     margin-bottom: 0;
 }
@@ -108,8 +115,18 @@ footer {
 #addPhotoDialog .fileTree {
     background: #fafafa;
     padding: 5px;
+    max-height: 200px;
+    overflow: auto;
+    padding-bottom: 5px;
 }
 
+#addPhotoDialog .rotateAngle.btngroup {
+    display: none;
+}
+
+/**
+ * Styling photos on post admin page and product admin pages
+ */
 #photos .records {
     clear: both;
     padding-bottom: 10px;
@@ -117,10 +134,6 @@ footer {
 
 #photos .records .record {
     display: inline-block;
-}
-
-#photos .records .record a {
-
 }
 
 #photos .records .record delete {
@@ -160,7 +173,31 @@ footer {
     -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
     box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
 }
-.product .photos {
+
+#photos .records input {
+    display: inline;
+    float: none;
+}
+
+/**
+ * Styling post photos on users page
+ */
+.post .products .product .photos {
     max-height: 120px;
     overflow: hidden;
+}
+
+.post .products .product .order label {
+    margin: 0;
+    padding: 0;
+    color: #d3d3d3;
+    text-align: left;
+    width: auto;
+    display: inline;
+    font-size: 16px;
+    float: none;
+}
+
+.post .order-form {
+    padding-top: 15px;
 }

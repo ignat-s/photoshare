@@ -1,13 +1,92 @@
-{% for product in post.products %}
-    <div class="product">
-        <h2>{{ product.title }}</h2>
-        {{ product.description|raw }}
-        <div class="media-grid photos">
-            {% for photo in product.photos %}
-                <a href="{{ path('post_photo_full', {'token': post.token, 'photoId': photo.id}) }}" class="colorbox" rel="{{ product.title }}">
-                    <img src="{{ path('post_photo_thumb', {'token': post.token, 'photoId': photo.id}) }}" />
-                </a>
-            {% endfor %}
+<div class="products">
+    {% for product in post.products %}
+        <div class="product">
+            <h2>{{ product.title }}</h2>
+            {{ product.description|raw }}
+            <div class="media-grid photos">
+                {% for photo in product.photos %}
+                    <a href="{{ path('post_photo_full', {'token': post.token, 'photoId': photo.id}) }}" class="colorbox" rel="{{ product.title }}">
+                        <img src="{{ path('post_photo_thumb', {'token': post.token, 'photoId': photo.id}) }}" />
+                    </a>
+                {% endfor %}
+            </div>
+            {% if orderForm is defined %}
+                <div class="order">
+                    <input type="checkbox" id="product_{{ product.id }}" name="product[{{ product.id }}]"/>
+                    <label for="product_{{ product.id }}">Add to order</label>
+                </div>
+            {% endif %}
         </div>
+    {% endfor %}
+</div>
+{% if orderForm is defined %}
+    <div class="order-form">
+        <button class="btn success large order">Make an order</button>
+        <form action="{{ path('order_create', {'token': post.token}) }}" method="POST" class="form-stacked hide">
+            <fieldset>
+                <legend>Fill out the form</legend>
+                {{ form_rest(orderForm) }}
+            </fieldset>
+            <div class="actions">
+                <input type="submit" value="Submit" class="btn success large"/>
+            </div>
+        </form>
+        <script type="text/javascript">
+        $(function() {
+            var orderButton = '.post .order-form button.order';
+            var submitButton = '.post .order-form input[type=submit]';
+            var orderForm = '.post .order-form form';
+            var orderProducts = '.post .order-form .products';
+            var createOrderUrl = '{{ path('order_create', {'token': post.token}) }}';
+            var setFormMessage = function(type, message) {
+                clearFormMessage();
+                $('<div class="alert-message ' + type + '">' +
+                    '<p>' + message + '</p>' +
+                '</div>').prependTo(orderForm).hide().slideDown('fast');
+            }
+            var clearFormMessage = function() {
+                $('.alert-message', orderForm).remove();
+            }
+            var parseJSON = function(string) {
+                var result = {}
+                try {
+                    result = JSON.parse(string);
+                } catch (e) {
+
+                }
+                return result;
+            }
+            $(orderButton).click(function() {
+                $(this).hide();
+                $(orderForm).slideDown();
+            });
+            $('.post .product .order input[type=checkbox]').change(function () {
+                var formInput = '#phosh_main_order_products_' + this.name.match(/\[([\d]+)\]/)[1];
+                if ($(this).is(':checked')) {
+                    $(formInput).attr('checked', 'checked');
+                } else {
+                    $(formInput).removeAttr('checked');
+                }
+
+            })
+            $('.post .order-form form input[type=checkbox]').change(function () {
+                var formInput = '#product_' + this.name.match(/\[([\d]+)\]/)[1];
+                if ($(this).is(':checked')) {
+                    $(formInput).attr('checked', 'checked');
+                } else {
+                    $(formInput).removeAttr('checked');
+                }
+            })
+            $(orderForm).submit(function() {
+                if (!$('.post .order-form form input:checked').length) {
+                    setFormMessage('error', 'Select at least one product');
+                    return false;
+                }
+
+                return true;
+            });
+
+        })
+        </script>
     </div>
-{% endfor %}
+{% endif %}

@@ -15,3 +15,15 @@ Phosh\MainBundle\Entity\Product:
       - MaxLength: 255
     description:
       - NotBlank: ~
+
+Phosh\MainBundle\Entity\Order:
+  properties:
+    customer:
+      - NotBlank: ~
+      - MinLength: 3
+      - MaxLength: 255
+    post:
+      - NotBlank: ~
+  getters:
+     productsNotEmpty:
+      - "True": { message: "Please add at least one product" }

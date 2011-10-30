@@ -5,5 +5,7 @@
 {% block page_header %}<h1>{{ post.title }}</h1>{% endblock %}
 
 {% block content %}
-    {% include 'PhoshMainBundle:Post:products.html.twig' %}
+    <div class="post">
+        {% include 'PhoshMainBundle:Post:products.html.twig' %}
+    </div>
 {% endblock %}

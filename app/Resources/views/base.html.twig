@@ -48,8 +48,10 @@
     		    maxWidth: '90%',
     		    maxHeight: '90%'
     		});
+    		$('button.toggle.btn').toggleBtn();
+            $('.radio button.btn').radio();
         });
-    	this.App = this.App || {};
+        this.App = this.App || {};
         App.config = {
             env: "{{ app.environment }}",
             activeRoute: "{{ app.request.get('_route') }}",

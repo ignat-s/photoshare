@@ -1,0 +1,9 @@
+{% extends '::base.html.twig' %}
+
+{% set page_title = 'Order received' %}
+
+{% block content %}
+
+    <h4>Thank you, {{ order.customer }}! Your order number is №{{ order.number }}.
+    Our manager we will contact you as soon as possible!</h4>
+{% endblock %}

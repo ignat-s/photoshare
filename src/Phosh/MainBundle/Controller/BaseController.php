@@ -114,6 +114,11 @@ class BaseController extends Controller
         return $this->getSession()->get($attrName);
     }
 
+    protected function getSessionValue($attrName)
+    {
+        return $this->getSession()->get($attrName);
+    }
+
     protected function setSessionValue($attrName, $attrValue)
     {
         return $this->getSession()->set($attrName, $attrValue);

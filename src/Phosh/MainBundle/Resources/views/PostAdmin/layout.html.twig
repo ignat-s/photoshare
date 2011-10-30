@@ -2,13 +2,14 @@
 {% from 'PhoshMainBundle::tabs.html.twig' import tab, delete_tab %}
 
 {% set active_route = app.request.get('_route') %}
+
 {% set route_titles = {
     'post_index': 'Posts',
     'post_create': 'Add post',
     'post_edit': 'Edit post',
-    'post_show': post is defined ? post.title : '',
+    'post_show': post is defined ? post.title : ''
 } %}
-{% set page_title = route_titles[active_route] is defined ? route_titles[active_route] : route_titles['post_index'] %}
+{% set page_title = (route_titles[active_route] is defined ? route_titles[active_route] : (post is defined ? post.title : route_titles['post_index'])) %}
 
 {% set breadcrumbs = [{ 'name': 'Posts', 'path': path('post_index') }] %}
 {% if post is defined and post.id %}
