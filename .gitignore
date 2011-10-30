@@ -4,4 +4,5 @@ app/logs/*
 photostorage/*
 tests/coverage
 vendor
+vendor/*
 web/bundles

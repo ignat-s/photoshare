@@ -54,7 +54,7 @@
     <p class="noRecordsFoundMessage {% if post.products|length %}hide{% endif %}">No products found</p>
 
     <button class="btn add">Add product</button>
-    <form action="{{ path('post_product_add', {'id': post.id, 'productId': 0}) }}" class="add hide">
+    <form action="{{ path('post_product_add', {'id': post.id ? post.id : 0, 'productId': 0}) }}" class="add hide">
         <fieldset>
             <legend>Search product</legend>
             <div class="clearfix">

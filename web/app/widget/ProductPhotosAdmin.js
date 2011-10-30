@@ -58,6 +58,8 @@ App.widget.ProductPhotosAdmin = Backbone.View.extend({
 
         me = this;
 
+        data.path = data.path.replace(/"/g, '%22');
+
         html = me.recordTemplate(data);
         if (data.id) {
             html = html.replace(/id=0/g, 'id=' + data.id);

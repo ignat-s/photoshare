@@ -141,17 +141,18 @@ footer {
 }
 
 #photos .records input {
-    float: left;
+    float: none;
+    display: inline;
 }
 
 #photos .records label {
     margin: 0;
     padding: 0;
     color: #d3d3d3;
-    text-align: right;
+    text-align: left;
     width: auto;
-    display: inherit;
-    float: left;
+    float: none;
+    display: inline;
 }
 
 #photos .records a {

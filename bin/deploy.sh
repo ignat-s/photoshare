@@ -23,4 +23,4 @@ if [ ! $source_dir -o ! $target_dir ]; then
 fi
 
 assert_dir $source_dir
-rsync -avz --exclude=".git" --exclude="app/cache/*" --exclude="app/logs/*"  --exclude="web/bundles/*" --exclude=".idea" --exclude="photostorage/*"  $source_dir/ $target_dir/
+rsync -avz --exclude=".git" --exclude="app/cache/*" --exclude="app/logs/*"  --exclude=".idea" --exclude="photostorage/*"  $source_dir/ $target_dir/

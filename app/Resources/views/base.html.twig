@@ -23,54 +23,62 @@
 
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
     <link rel="stylesheet" href="{{ asset('vendors/bootstrap/bootstrap.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('vendors/bootstrap/bootstrap-radiotoggle.css') }}" />
     <link rel="stylesheet" href="{{ asset('vendors/colorbox/colorbox.css') }}" />
-    <link rel="stylesheet" href="{{ asset('vendors/jquery.ui/css/redmond/jquery-ui-1.8.16.custom.css') }}" />
+    {% if is_granted('ROLE_ADMIN') %}
+        <link rel="stylesheet" href="{{ asset('vendors/bootstrap/bootstrap-radiotoggle.css') }}" />
+        <link rel="stylesheet" href="{{ asset('vendors/jquery.ui/css/redmond/jquery-ui-1.8.16.custom.css') }}" />
+        <link rel="stylesheet" href="{{ asset('vendors/filetree/filetree.css') }}"/>
+    {% endif %}
     <link rel="stylesheet" href="{{ asset('app/resources/css/styles.css') }}" />
     <style type="text/css">
         body {
-          padding-top: {{ padding_top_px }}/*40px*/; /* 40px to make the container go all the way to the bottom of the topbar */
+            padding-top: {{ padding_top_px }}/*40px*/; /* 40px to make the container go all the way to the bottom of the topbar */
         }
     </style>
-    <link rel="stylesheet" href="{{ asset('vendors/filetree/filetree.css') }}"/>
     {% block stylesheets %}{% endblock %}
     
     <script src="{{ asset('vendors/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('vendors/jquery.ui/jquery-ui-1.8.16.custom.min.js') }}"></script>
-    <script src="{{ asset('vendors/filetree/jquery.filetree.js') }}"></script>
     <script src="{{ asset('vendors/colorbox/jquery.colorbox-min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('vendors/bootstrap/bootstrap-modal.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('vendors/bootstrap/bootstrap-alerts.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('vendors/bootstrap/bootstrap-radiotoggle.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vendors/json2.js') }}"></script>
+    {% if is_granted('ROLE_ADMIN') %}
+        <script src="{{ asset('vendors/jquery.ui/jquery-ui-1.8.16.custom.min.js') }}"></script>
+        <script src="{{ asset('vendors/filetree/jquery.filetree.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('vendors/bootstrap/bootstrap-modal.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('vendors/bootstrap/bootstrap-alerts.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('vendors/bootstrap/bootstrap-radiotoggle.js') }}"></script>
+        {% if app.environment == 'prod' %}
+            <script type="text/javascript" src="{{ asset('vendors/underscore/underscore-min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('vendors/backbone/backbone-min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('vendors/jquery/jquery.tmpl.min.js') }}"></script>
+        {% else %}
+            <script type="text/javascript" src="{{ asset('vendors/underscore/underscore.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('vendors/backbone/backbone.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('vendors/jquery/jquery.tmpl.js') }}"></script>
+        {% endif %}
+        <script type="text/javascript" src="{{ asset('app/core/underscore/extend.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('app/core/underscore/templateSettings.js') }}"></script>
+        <script type="text/javascript">
+            $(function() {
+                $('button.toggle.btn').toggleBtn();
+                $('.radio button.btn').radio();
+            });
+            this.App = this.App || {};
+            App.config = {
+                env: "{{ app.environment }}",
+                activeRoute: "{{ app.request.get('_route') }}",
+                routes: {}
+            }
+        </script>
+    {% endif %}
+    
     <script type="text/javascript">
     	$(function() {
             $("a.colorbox").colorbox({
-    		    maxWidth: '90%',
-    		    maxHeight: '90%'
-    		});
-    		$('button.toggle.btn').toggleBtn();
-            $('.radio button.btn').radio();
+                maxWidth: '90%',
+                maxHeight: '90%'
+            });
         });
-        this.App = this.App || {};
-        App.config = {
-            env: "{{ app.environment }}",
-            activeRoute: "{{ app.request.get('_route') }}",
-            routes: {}
-        }
     </script>
-
-    <script type="text/javascript" src="{{ asset('vendors/json2.js') }}"></script>
-    {% if app.environment == 'prod' %}
-        <script type="text/javascript" src="{{ asset('vendors/underscore/underscore-min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('vendors/backbone/backbone-min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('vendors/jquery/jquery.tmpl.min.js') }}"></script>
-    {% else %}
-        <script type="text/javascript" src="{{ asset('vendors/underscore/underscore.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('vendors/backbone/backbone.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('vendors/jquery/jquery.tmpl.js') }}"></script>
-    {% endif %}
-    <script type="text/javascript" src="{{ asset('app/core/underscore/extend.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('app/core/underscore/templateSettings.js') }}"></script>
     
     {% block scripts %}{% endblock %}
 </head>

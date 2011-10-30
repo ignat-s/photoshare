@@ -251,7 +251,7 @@ class ProductAdminController extends BaseController
 
         if ($id) {
             $product = $this->findProduct($id);
-            $this>assertNotNull($product);
+            $this->assertNotNull($product);
             
             $em = $this->getEntityManager();
             $photos = $this->findProductPhotos($product, $photoIds);
