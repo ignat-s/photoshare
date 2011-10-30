@@ -36,6 +36,9 @@ class OrderController extends BaseController
             if ($form->isValid()) {
                 $this->getEntityManager()->persist($order);
                 $this->getEntityManager()->flush();
+
+                $this->getMailer()->sendOrderCreatedEmailMessage($order);
+
                 $success = true;
                 $message = 'Thank you! Your order is recieved!';
 
@@ -68,6 +71,14 @@ class OrderController extends BaseController
         return array(
             'order' => $order,
         );
+    }
+
+    /**
+     * @return \Phosh\MainBundle\Mailer\Mailer
+     */
+    private function getMailer()
+    {
+        return $this->get('phosh_main.mailer');
     }
 
     private function findOrder($id)

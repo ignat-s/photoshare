@@ -1,0 +1,19 @@
+{% autoescape false %}
+New order created
+New order created {{ order.createdAt|date("Y/m/d") }} at {{ order.createdAt|date("H:i:s") }}.
+
+Order number: {{ order.number }}
+Customer: {{ order.customer }}
+Contacts: {{ order.contact }}
+Comments:
+{{ order.comment }}
+
+Post: {{ order.post.title }}, {{ url('post_show', {'id': order.post.id}) }}
+Products:
+{% for product in order.post.products %}
+  {{ loop.index }}. {{ product.title }}, {{ url('product_show', {'id': product.id}) }}
+{% endfor %}
+
+Regards,
+the Team.
+{% endautoescape %}
