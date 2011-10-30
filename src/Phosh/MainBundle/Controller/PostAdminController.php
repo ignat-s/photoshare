@@ -136,18 +136,16 @@ class PostAdminController extends BaseController
 
 
     /**
-     * @Route("/product_add", name="post_product_add")
+     * @Route("/{id}/product_add/{productId}", name="post_product_add")
      * @Template()
      */
-    public function productAddAction()
+    public function productAddAction($id, $productId)
     {
-        $productId = $this->getRequest()->get('productId');
         $product = $this->findProduct($productId);
         $this->assertNotNull($product);
 
-        $postId = $this->getRequest()->get('postId');
-        if ($postId) {
-            $post = $this->findPost($postId);
+        if ($id) {
+            $post = $this->findPost($id);
             $this->assertNotNull($post);
             if ($post->hasProduct($product)) {
                 $success = false;

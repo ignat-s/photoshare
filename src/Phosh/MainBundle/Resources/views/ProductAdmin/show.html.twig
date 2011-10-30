@@ -9,5 +9,13 @@
     </div>
 
     {{ product.description|raw }}
+
+    <div class="media-grid">
+        {% for photo in product.photos %}
+            <a href="{{ path('photostorage_photo', {'id': photo.id}) }}" class="colorbox" rel="{{ product.title }}">
+                <img src="{{ path('photostorage_photo', {'id': photo.id, 'w': 100, 'h': 100}) }}" />
+            </a>
+        {% endfor %}
+    </div>
     
 {% endblock %}

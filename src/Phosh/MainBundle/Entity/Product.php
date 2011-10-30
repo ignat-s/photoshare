@@ -67,6 +67,7 @@ class Product
 
     public function addPhoto(Photo $photo)
     {
+        $photo->setProduct($this);
         $this->photos->add($photo);
     }
 

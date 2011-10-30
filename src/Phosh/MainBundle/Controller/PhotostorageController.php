@@ -7,24 +7,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
-use Phosh\MainBundle\Entity\Post;
-use Phosh\MainBundle\Form\Type\PostType;
+use Phosh\MainBundle\Entity\Photo;
 
 /**
- * @Route("/filestorage")
+ * @Route("/photostorage")
  * @Secure(roles="ROLE_ADMIN")
  */
-class FileStorageController extends BaseController
+class PhotostorageController extends BaseController
 {
     /**
-     * @Route("/tree", name="filestorage_tree")
+     * @Route("/filetree", name="photostorage_filetree")
      * @Template()
      */
-    public function treeAction()
+    public function filetreeAction()
     {
         $relativeDir = $this->getRequest()->get('dir');
-        /*var_dump(urldecode($relativeDir));
-        die();*/
         $absolutedir = $this->getPhotoStorage()->getAbsolutePath($relativeDir);
 
         $this->assertTrue(is_dir($absolutedir));
@@ -55,18 +52,33 @@ class FileStorageController extends BaseController
     }
 
     /**
-     * @Route("/image_thumb.{format}", name="filestorage_imagethumb", requirements={"format"="jpg|jpeg|png"}, defaults={"format"="jpeg"})
+     * @Route("/photo.jpeg", name="photostorage_photo", requirements={"format"="jpg|jpeg|png"}, defaults={"format"="jpeg"})
      * @Template()
      */
-    public function imageThumbAction($format)
+    public function photoAction($format)
     {
-        $width = $this->getRequest()->get('h', 100);
-        $height = $this->getRequest()->get('w', 100);
-        $path = $this->getRequest()->get('p');
-        $rotateAngle = $this->getPhotoStorage()->decodeRotateAngle($this->getRequest()->get('r'));
+        $width = $this->getRequest()->get('h', 0);
+        $height = $this->getRequest()->get('w', 0);
         
-        $photoThumb = $this->getPhotoStorage()->getPhotoThumbPath($path, $width, $height, $format, $rotateAngle);
-        return $this->getImageResponseFactory()->createImageResponse($photoThumb, $format);
+        if ($id = $this->getRequest()->get('id')) {
+            $photo = $this->findPhoto($id);
+            $this->assertNotNull($photo);
+            $path = $photo->getPath();
+            $rotateAngle = $photo->getRotateAngle();
+        } else if ($this->getRequest()->get('p')) {
+            $path = $this->getRequest()->get('p');
+            $rotateAngle = $this->getPhotoStorage()->decodeRotateAngle($this->getRequest()->get('r'));
+        } else {
+            $this->fail(null, 400);
+        }
+
+        if ($width || $height) {
+            $photoPath = $this->getPhotoStorage()->getPhotoThumbPath($path, $width, $height, $format, $rotateAngle);
+        } else {
+            $photoPath = $this->getPhotoStorage()->getPhotoPath($path, $format, $rotateAngle);
+        }
+
+        return $this->getImageResponseFactory()->createImageResponse($photoPath, $format);
     }
 
     /**
@@ -83,5 +95,14 @@ class FileStorageController extends BaseController
     public function getPhotoStorage()
     {
         return $this->get('phosh.photo_storage');
+    }
+
+    /**
+     * @param $id
+     * @return \Phosh\MainBundle\Entity\Photo
+     */
+    private function findPhoto($id)
+    {
+        return $this->getRepository(Photo::CLASS_NAME)->find($id);
     }
 }

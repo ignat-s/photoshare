@@ -27,11 +27,11 @@ class PhotoStorage
         return $this->createAbsolutePath(preg_replace('/^[\/]*/', '', $relativePath));
     }
     
-    public function getPhotoPath($photoRelativePath, $rotateAngle = 0)
+    public function getPhotoPath($photoRelativePath, $format = 'jpeg', $rotateAngle = 0)
     {
         if ($rotateAngle) {
             // get rotated photo
-            return $this->getOrCreateConvertedPhotoPath($photoRelativePath, 0, 0, 'jpeg', $rotateAngle);
+            return $this->getOrCreateConvertedPhotoPath($photoRelativePath, 0, 0, $format, $rotateAngle);
         } else {
             // get original photo path
             $photo = $this->getAbsolutePath($photoRelativePath);
@@ -53,7 +53,7 @@ class PhotoStorage
                 $image = $imagine->open($photo);
 
                 if ($width && $height) {
-                    $image = $image->thumbnail(new \Imagine\Image\Box($width, $height), \Imagine\ImageInterface::THUMBNAIL_INSET);
+                    $image = $image->thumbnail(new \Imagine\Image\Box($width, $height), \Imagine\ImageInterface::THUMBNAIL_OUTBOUND);
                 }
                 if ($rotateAngle) {
                     $image = $image->rotate($rotateAngle);

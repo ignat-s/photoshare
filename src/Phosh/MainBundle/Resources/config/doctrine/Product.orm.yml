@@ -28,20 +28,11 @@ Phosh\MainBundle\Entity\Product:
         timestampable:
           on: update
 
-  manyToMany:
+  oneToMany:
     photos:
-      cascade: ["all"]
+      cascade: ["persist"]
       targetEntity: Photo
-      joinTable:
-        name: product_photos
-        joinColumns:
-          product_id:
-            referencedColumnName: id
-            onDelete: "CASCADE"
-        inverseJoinColumns:
-          photo_id:
-            referencedColumnName: id
-            onDelete: "CASCADE"
+      mappedBy: product
 
   manyToOne:
     owner:

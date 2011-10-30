@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 use Phosh\MainBundle\Entity\Post;
+use Phosh\MainBundle\Entity\Photo;
 use Phosh\MainBundle\Form\Type\PostType;
 
 /**
@@ -31,46 +32,50 @@ class PostController extends BaseController
     }
 
     /**
-     * @Route("/i/t", name="post_image_thumb")
+     * @Route("/i/t/{photoId}.jpeg", name="post_photo_thumb", requirements={"photoId"="\d+"})
      * @ParamConverter("token", class="PhoshMainBundle:Post")
      * @Template()
      */
-    public function thumbImageAction(Post $post, $format = 'jpeg')
+    public function photoThumbAction(Post $post, $photoId, $format = 'jpeg', $width = 100, $height = 100)
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             $this->assertFalse($post->isExpired());
         }
 
-        $path = $this->getRequest()->get('p');
-        //$this->assertTrue($post->hasAttachedPhoto($path));
-
-        $width = $this->getRequest()->get('h', 640);
-        $height = $this->getRequest()->get('w', 640);
-
-        $rotateAngle = $this->getPhotoStorage()->decodeRotateAngle($this->getRequest()->get('r'));
-
-        $photoThumb = $this->getPhotoStorage()->getPhotoThumbPath($path, $width, $height, $format, $rotateAngle);
-        return $this->getImageResponseFactory()->createImageResponse($photoThumb, $format);
+        $photo = $this->findPhoto($photoId);
+        $this->assertNotNull($photo);
+        $this->assertTrue($post->hasProduct($photo->getProduct()));
+        
+        $imagePath = $this->getPhotoStorage()->getPhotoThumbPath($photo->getPath(), $width, $height, $format, $photo->getRotateAngle());
+        return $this->getImageResponseFactory()->createImageResponse($imagePath, $format);
     }
 
     /**
-     * @Route("/i/f", name="post_image_full")
+     * @Route("/i/{photoId}.jpeg", name="post_photo_full", requirements={"photoId"="\d+"})
      * @ParamConverter("token", class="PhoshMainBundle:Post")
      * @Template()
      */
-    public function fullImageAction(Post $post, $format = 'jpeg')
+    public function photoFullAction(Post $post, $photoId, $format = 'jpeg')
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             $this->assertFalse($post->isExpired());
         }
 
-        $path = $this->getRequest()->get('p');
-        //$this->assertTrue($post->hasAttachedPhoto($path));
+        $photo = $this->findPhoto($photoId);
+        $this->assertNotNull($photo);
+        $this->assertTrue($post->hasProduct($photo->getProduct()));
 
-        $rotateAngle = $this->getPhotoStorage()->decodeRotateAngle($this->getRequest()->get('r'));
+        $imagePath = $this->getPhotoStorage()->getPhotoPath($photo->getPath(), $photo->getRotateAngle());
+        return $this->getImageResponseFactory()->createImageResponse($imagePath, $format);
+    }
 
-        $photoThumb = $this->getPhotoStorage()->getPhotoPath($path, $rotateAngle);
-        return $this->getImageResponseFactory()->createImageResponse($photoThumb, $format);
+    /**
+     * @param $id
+     * @return \Phosh\MainBundle\Entity\Photo|null
+     */
+    private function findPhoto($id)
+    {
+        return $this->getRepository(Photo::CLASS_NAME)->find($id);
     }
 
     /**

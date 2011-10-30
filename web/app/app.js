@@ -1,7 +1,9 @@
 $(function() {
-    /**
-     * Create namespace
-     */
+    $('.toggle.btn').toggleBtn();
+    $('.radio .btn').radio();
+    $("input.datepicker").datepicker({
+        'dateFormat' : 'yy/mm/dd'
+    });
 
     if (_.isUndefined(window.App)) {
         window.App = {
@@ -22,9 +24,16 @@ $(function() {
      * init Server time
      */
     switch (App.config.activeRoute) {
-        case 'post_create': case 'post_edit' :
+        case 'post_create':
+        case 'post_edit' :
             new App.router.PostAdmin({
                 productSearchUrl: App.config.routes.product_search
+            });
+            break;
+        case 'product_create':
+        case 'product_edit' :
+            new App.router.ProductAdmin({
+                //productSearchUrl: App.config.routes.product_search
             });
             break;
     }
@@ -47,4 +56,12 @@ $(function() {
         }
         return result;
     }
+
+    App.applyColorbox = function(el) {
+        $("a.colorbox", el).colorbox({
+            maxWidth: '90%',
+            maxHeight: '90%'
+        });
+    }
+
 });

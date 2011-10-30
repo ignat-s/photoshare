@@ -1,4 +1,4 @@
-_.namespace('App.router.PostEdit');
+_.namespace('App.router.PostAdmin');
 
 App.router.PostAdmin = Backbone.Router.extend({
 			postProductsAdminWidget : null,

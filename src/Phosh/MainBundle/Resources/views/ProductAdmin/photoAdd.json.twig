@@ -1,0 +1,13 @@
+{%
+    set data = {
+        'success': success,
+        'message': message,
+        'data': photo ? {
+            'id' : photo.id,
+            'path': photo.path,
+            'rotateAngle': photo.rotateAngle,
+            'hash': photo.hash
+        } : null
+    }
+%}
+{{ data|json_encode|raw }}

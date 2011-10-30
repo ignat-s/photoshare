@@ -23,11 +23,11 @@ class ImageResponseFactory
         );
 
         // Checking if the client is validating his cache and if it is current.
-        /*if (($this->request->headers->has('If-Modified-Since')) && (strtotime($this->request->headers->get('If-Modified-Since')) == $fileModTime)) {
+        if (($this->request->headers->has('If-Modified-Since')) && (strtotime($this->request->headers->get('If-Modified-Since')) == $fileModTime)) {
             // Client's cache IS current, so we just respond '304 Not Modified'.
             $headers['Last-Modified'] = gmdate('D, d M Y H:i:s', $fileModTime) . ' GMT';
             $responseCode = 304;
-        } else */{
+        } else {
             // Image not cached or cache outdated, we respond '200 OK' and output the image.
             $headers += array(
                 'Last-Modified' => gmdate('D, d M Y H:i:s', $fileModTime) . ' GMT',

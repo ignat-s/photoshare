@@ -11,7 +11,7 @@
 {% set page_title = route_titles[active_route] is defined ? route_titles[active_route] : route_titles['product_index'] %}
 
 {% set breadcrumbs = [{ 'name': 'Products', 'path': path('product_index') }] %}
-{% if product is defined %}
+{% if product is defined and product.id %}
     {% set breadcrumbs = breadcrumbs|merge([{ 'name': product.title, 'path': path('product_show', { 'id' : product.id }) }]) %}
 {% endif %}
 {% if active_route not in ['product_index', 'product_show'] %}

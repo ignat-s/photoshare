@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 use Phosh\MainBundle\Entity\Product;
+use Phosh\MainBundle\Entity\Photo;
 use Phosh\MainBundle\Entity\Post;
 use Phosh\MainBundle\Form\Type\ProductType;
 use Phosh\MainBundle\Pager\Pager;
@@ -66,10 +67,11 @@ class ProductAdminController extends BaseController
     {
         $product = new Product();
         $product->setOwner($this->getCurrentUser());
-        $form = $this->createForm(new ProductType(), $product);
 
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
+            $this->addRememberedProductPhotos($product);
+            $form = $this->createForm(new ProductType(), $product);
             $form->bindRequest($request);
 
             if ($form->isValid()) {
@@ -80,6 +82,9 @@ class ProductAdminController extends BaseController
             } else {
                 $this->get('session')->setFlash('error', 'Product saving error');
             }
+        } else {
+            $this->resetRememberedProductPhotos();
+            $form = $this->createForm(new ProductType(), $product);
         }
 
         return array(
@@ -170,6 +175,146 @@ class ProductAdminController extends BaseController
     }
 
     /**
+     * @Route("/{id}/photo_add", name="product_photo_add")
+     * @ParamConverter("id", class="PhoshMainBundle:Product")
+     * @Template()
+     */
+    public function photoAddAction($id)
+    {
+        $type = $this->getRequest()->get('type');
+        $path = $this->getRequest()->get('path');
+
+        if ($id) {
+            $product = $this->findProduct($id);
+            $this->assertNotNull($product);
+            if ($type == 'file') {
+                $rotateAngle = $this->getPhotoStorage()->decodeRotateAngle($this->getRequest()->get('rotateAngle'));
+                $photo = new Photo();
+                $photo->setPath($path);
+                $photo->setRotateAngle($rotateAngle);
+
+                if ($product->hasPhoto($photo)) {
+                    $success = false;
+                    $message = 'Product already has this photo';
+                } else {
+                    $product->addPhoto($photo);
+                    $this->getEntityManager()->flush();
+
+                    $success = true;
+                    $message = 'Photo added';
+                }
+            } else if ($type == 'dir') {
+                $success = false;
+                $message = 'Adding directory is not implemented yet';
+            } else {
+                $this->fail(null, 400);
+            }
+        } else {
+            if ($type == 'file') {
+                $rotateAngle = $this->getPhotoStorage()->decodeRotateAngle($this->getRequest()->get('rotateAngle'));
+                $photo = new Photo();
+                $photo->setPath($path);
+                $photo->setRotateAngle($rotateAngle);
+                if (!$this->hasRememberedProductPhoto($photo)) {
+                    $this->setRememberToAddProductPhoto($photo);
+                    $success = true;
+                    $message = 'Photo added';
+                } else {
+                    $success = false;
+                    $message = 'Product already has this photo';
+                }
+
+
+            } else if ($type == 'dir') {
+                $success = false;
+                $message = 'Adding directory is not implemented yet';
+            } else {
+                $this->fail(null, 400);
+            }
+        }
+
+        return array(
+            'success' => $success,
+            'message' => $message,
+            'photo' => isset($photo) ? $photo : null
+        );
+    }
+
+    /**
+     * @Route("/{id}/photo_remove", name="product_photo_remove")
+     * @ParamConverter("id", class="PhoshMainBundle:Product")
+     * @Template()
+     */
+    public function photoRemoveAction($id)
+    {
+        $photoIds = $this->getRequest()->get('photos');
+
+        if ($id) {
+            $product = $this->findProduct($id);
+            $this>assertNotNull($product);
+            
+            $em = $this->getEntityManager();
+            $photos = $this->findProductPhotos($product, $photoIds);
+
+            $this->assertTrue(count($photos) == count($photoIds));
+
+            foreach ($photos as $photo) {
+                $em->remove($photo);
+            }
+            $em->flush();
+        } else {
+            foreach ($photoIds as $id) {
+                $this->unsetRememberToAddPostProduct($id);
+            }
+        }
+        $success = true;
+        $message = 'Product photos removed';
+
+        return array(
+            'success' => $success,
+            'message' => $message
+        );
+    }
+
+    private function setRememberToAddProductPhoto(Photo $photo)
+    {
+        $attrName = 'remembered_photos';
+        $attrValue = $this->getSessionArrayValue($attrName);
+        $attrValue[$photo->getHash()] = $photo;
+        $this->setSessionValue($attrName, $attrValue);
+    }
+
+    private function hasRememberedProductPhoto(Photo $photo)
+    {
+        $attrName = 'remembered_photos';
+        $attrValue = $this->getSessionArrayValue($attrName);
+        return isset($attrValue[$photo->getHash()]);
+    }
+
+    private function unsetRememberToAddPostProduct($photo)
+    {
+        $attrName = 'remembered_photos';
+        $attrValue = $this->getSessionArrayValue($attrName);
+        $hash = $photo instanceof Photo ? $photo->getHash() : $photo;
+        unset($attrValue[$hash]);
+        $this->setSessionValue($attrName, $attrValue);
+    }
+
+    private function addRememberedProductPhotos(Product $product)
+    {
+        $attrName = 'remembered_photos';
+        foreach ($this->getSessionArrayValue($attrName) as $photo) {
+            $product->addPhoto($photo);
+        }
+    }
+
+    private function resetRememberedProductPhotos()
+    {
+        $attrName = 'remembered_photos';
+        $this->removeSessionValue($attrName);
+    }
+
+    /**
      * @param $postId
      * @return \Phosh\MainBundle\Entity\Product[]
      */
@@ -189,5 +334,41 @@ class ProductAdminController extends BaseController
         }
 
         return $result;
+    }
+
+    /**
+     * @param \Phosh\MainBundle\Entity\Product $product
+     * @param array $ids
+     * @return \Phosh\MainBundle\Entity\Photo[]
+     */
+    private function findProductPhotos(Product $product, $ids)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $photos = $qb->select('photo')
+            ->from('PhoshMainBundle:Photo', 'photo')
+            ->where($qb->expr()->in('photo.id', $ids))
+            ->andWhere('photo.product = :product')
+            ->setParameter('product', $product)
+            ->getQuery()->getResult();
+
+        return $photos;
+    }
+
+    /**
+     * @param $id
+     * @return \Phosh\MainBundle\Entity\Product|null
+     */
+    private function findProduct($id)
+    {
+        return $this->getRepository(Product::CLASS_NAME)->find($id);
+    }
+
+    /**
+     * @return \Phosh\MainBundle\PhotoStorage
+     */
+    public function getPhotoStorage()
+    {
+        return $this->get('phosh.photo_storage');
     }
 }

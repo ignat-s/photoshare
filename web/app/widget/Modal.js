@@ -11,7 +11,7 @@ App.widget.Modal = Backbone.View.extend({
 					+ '{html}'
 					+ '<div class="modal-footer">'
 					+ '<a href="#" class="btn secondary">{secondaryText}</a>'
-					+ '<a href="#" class="btn primary">{primaryText}</a>'					
+					+ '<a href="#" class="btn primary">{primaryText}</a>'
 					+ '</div>' + '</div>'),
 	templateBody : _.template('<div class="modal-body">' + '{html}' + '</div>'),
 	initialize : function() {

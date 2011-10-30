@@ -2,5 +2,12 @@
     <div class="product">
         <h2>{{ product.title }}</h2>
         {{ product.description|raw }}
+        <div class="media-grid photos">
+            {% for photo in product.photos %}
+                <a href="{{ path('post_photo_full', {'token': post.token, 'photoId': photo.id}) }}" class="colorbox" rel="{{ product.title }}">
+                    <img src="{{ path('post_photo_thumb', {'token': post.token, 'photoId': photo.id}) }}" />
+                </a>
+            {% endfor %}
+        </div>
     </div>
 {% endfor %}

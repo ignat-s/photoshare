@@ -1,6 +1,6 @@
 {% block scripts %}
-    <script id="productRowTmpl" type="text/template">
-        <div class="record" data-product-id="{id}">
+    <script id="productTmpl" type="text/template">
+        <div class="record" data-record-id="{id}">
             <h2 class="title">{title}</h2>
             <div class="description">
                 {description}
@@ -25,46 +25,51 @@
 <div id="products">
     <ul class="tabs">
         <li class="active">
-            <a href="#">Products</a>
+            <a href="#" onclick="return false;">Products</a>
         </li>
     </ul>
     <img src="{{ asset('blank.png') }}"/>
-    <div id="productsAdminPanel">
-        <div class="records">
-        {% for product in post.products %}
-            <div class="record" data-product-id="{{ product.id }}">
-                <h2 class="title">{{ product.title }}</h2>
-                <div class="description">
-                    {{ product.description|raw }}
-                </div>
-                <div class="well">
-                    <a href="{{ path('product_show', {'id': product.id}) }}" class="btn" title="Open product details page in this window" >Details page</a>
-                    <a href="{{ path('post_product_remove', {'id': post.id, 'productId': product.id}) }}" title="Remove this product from post" value="remove" class="btn danger remove">Remove</a>
+    <div class="records">
+    {% for product in post.products %}
+        <div class="record" data-record-id="{{ product.id }}">
+            <h2 class="title">{{ product.title }}</h2>
+            <div class="description">
+                {{ product.description|raw }}
+            </div>
+            <div class="media-grid photos">
+                {% for photo in product.photos %}
+                    <a href="{{ path('photostorage_photo', {'id': photo.id}) }}" class="colorbox" rel="{{ product.title }}">
+                        <img src="{{ path('photostorage_photo', {'id': photo.id, 'w': 100, 'h': 100}) }}" />
+                    </a>
+                {% endfor %}
+            </div>
+            <div class="well">
+                <a href="{{ path('product_show', {'id': product.id}) }}" class="btn" title="Open product details page in this window" >Details page</a>
+                <a href="{{ path('product_edit', {'id': product.id}) }}" class="btn info" title="Open product edit page in this window" >Edit</a>
+                <a href="{{ path('post_product_remove', {'id': post.id, 'productId': product.id}) }}" title="Remove this product from post" value="remove" class="btn danger remove">Remove</a>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    <p class="noRecordsFoundMessage {% if post.products|length %}hide{% endif %}">No products found</p>
+
+    <button class="btn add">Add product</button>
+    <form action="{{ path('post_product_add', {'id': post.id, 'productId': 0}) }}" class="add hide">
+        <fieldset>
+            <legend>Search product</legend>
+            <div class="clearfix">
+                <label class="required" for="productTitle">Product title:</label>
+                <div class="input">
+                    <input type="text" class="xxlarge" name="productTitle" id="productTitle" required="required"/>
+                    <input type="hidden" name="productId" />
                 </div>
             </div>
-        {% endfor %}
-        </div>
-        <p class="noRecordsFoundMessage" {% if post.products|length %}style="display: none;"{% endif %}>No products found</p>
-
-        <button class="btn add">Add product</button>
-        <form action="{{ path('post_product_add') }}" class="add" style="display: none;">
-            <fieldset>
-                <legend>Search product</legend>
-                <div class="clearfix">
-                    <label class="required" for="productTitle">Product title:</label>
-                    <div class="input">
-                        <input type="text" class="xxlarge" name="productTitle" id="productTitle" required="required"/>
-                        <input type="hidden" name="productId" />
-                    </div>
-                </div>
-                <div class="actions">
-                    <input type="submit" value="Add product" class="btn primary submit"/>
-                    <input type="reset" value="Cancel" class="btn cancel" />
-                </div>
-            </fieldset>
-            <input type="hidden" name="postId" value="{{ post.id }}"/>
-        </form>
-    </div>
-
+            <div class="actions">
+                <input type="submit" value="Add product" class="btn primary submit"/>
+                <input type="reset" value="Cancel" class="btn cancel" />
+            </div>
+        </fieldset>
+        <input type="hidden" name="postId" value="{{ post.id }}"/>
+    </form>
 
 </div>

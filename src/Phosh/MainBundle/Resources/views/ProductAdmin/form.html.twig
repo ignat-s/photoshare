@@ -2,7 +2,7 @@
     {% include 'PhoshMainBundle::tinymce.html.twig' %}
 {% endblock %}
 
-<form action="{{ path('product_' ~ mode, { 'id': product.id }) }}" method="post" class="form-stacked">
+<form action="{{ path('product_' ~ (product.id ? 'edit' : 'create'), { 'id': product.id }) }}" method="post" class="form-stacked">
     {{ form_errors(form) }}
     <fieldset>
         {{ form_row(form.title) }}

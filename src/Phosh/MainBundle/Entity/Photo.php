@@ -2,7 +2,7 @@
 
 namespace Phosh\MainBundle\Entity;
 
-class Photo
+class Photo implements \Serializable
 {
     const CLASS_NAME = 'Phosh\MainBundle\Entity\Photo';
 
@@ -56,14 +56,32 @@ class Photo
         return $this->product;
     }
 
+    public function getHash()
+    {
+        return md5($this->getPath() . $this->getRotateAngle());
+    }
+
     public function equalsTo($other)
     {
         if (!$other instanceof self) {
             return false;
         }
-        if ($this->id || $other->id) {
-            return $this->id == $other->id;
-        }
-        return $this == $other;
+        return $this->path == $other->path && $this->rotateAngle == $other->rotateAngle;
+    }
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->path,
+            $this->rotateAngle,
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list(
+            $this->path,
+            $this->rotateAngle,
+        ) = unserialize($serialized);
     }
 }

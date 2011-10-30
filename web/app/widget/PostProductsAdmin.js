@@ -1,16 +1,14 @@
-_.namespace('App.widget.tender.PostProductsAdmin');
+_.namespace('App.widget.PostProductsAdmin');
 
 App.widget.PostProductsAdmin = Backbone.View.extend({
-    el : '#productsAdminPanel',
-    recordsEl : '#productsAdminPanel .records',
-    recordTemplate : _.template($('#productRowTmpl').html()),
-    noRecordsFoundMessageEl : '#productsAdminPanel .noRecordsFoundMessage',
-    productTitleEl: '#productsAdminPanel form.add input[name=productTitle]',
-    productIdEl: '#productsAdminPanel form.add input[name=productId]',
-    postIdEl: '#productsAdminPanel form.add input[name=postId]',
-    addFormEl : '#productsAdminPanel form.add',
-    addButtonEl : '#productsAdminPanel button.add',
-    addForm: null,
+    el : '#products',
+    recordsEl : '#products .records',
+    recordTemplate : _.template($('#productTmpl').html()),
+    noRecordsFoundMessageEl : '#products .noRecordsFoundMessage',
+    productTitleEl: '#products form.add input[name=productTitle]',
+    productIdEl: '#products form.add input[name=productId]',
+    addFormEl : '#products form.add',
+    addButtonEl : '#products button.add',
     initialize: function(options) {
         var me;
 
@@ -67,7 +65,7 @@ App.widget.PostProductsAdmin = Backbone.View.extend({
         var me, productId, removeUrl;
 
         me = this;
-        productId = $(productEl).attr('data-product-id');
+        productId = $(productEl).attr('data-record-id');
 
         $('.btn.remove', productEl).click(function() {
             removeUrl = $(this).attr('href');
@@ -126,7 +124,7 @@ App.widget.PostProductsAdmin = Backbone.View.extend({
 
         me = this;
         formData = me.getAddFormData();
-        url = $(me.addFormEl).attr('action');
+        url = $(me.addFormEl).attr('action').replace(/\/0$/, '/' + formData.productId);
 
         if (formData.productId) {
             $('input, submit, reset', me.addFormEl).attr('disabled', 'disabled');
@@ -134,7 +132,7 @@ App.widget.PostProductsAdmin = Backbone.View.extend({
                 scope: me,
                 url: url,
                 complete: function() {
-                    $('input, submit, reset', me.addFormEl).removeAttr('disabled', 'disabled');
+                    $('input, submit, reset', me.addFormEl).removeAttr('disabled');
                 },
                 success: function(responseData, textStatus, jqXHR) {
                     if (responseData.success) {
@@ -179,8 +177,7 @@ App.widget.PostProductsAdmin = Backbone.View.extend({
         me = this;
 
         return {
-            productId : $(me.productIdEl).val(),
-            postId : $(me.postIdEl).val()
+            productId : $(me.productIdEl).val()
         }
     },
     resetAddFormData: function() {

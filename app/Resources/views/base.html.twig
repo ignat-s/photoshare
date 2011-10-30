@@ -23,6 +23,7 @@
 
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
     <link rel="stylesheet" href="{{ asset('vendors/bootstrap/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('vendors/bootstrap/bootstrap-radiotoggle.css') }}" />
     <link rel="stylesheet" href="{{ asset('vendors/colorbox/colorbox.css') }}" />
     <link rel="stylesheet" href="{{ asset('vendors/jquery.ui/css/redmond/jquery-ui-1.8.16.custom.css') }}" />
     <link rel="stylesheet" href="{{ asset('app/resources/css/styles.css') }}" />
@@ -40,25 +41,19 @@
     <script src="{{ asset('vendors/colorbox/jquery.colorbox-min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('vendors/bootstrap/bootstrap-modal.js') }}"></script>
     <script type="text/javascript" src="{{ asset('vendors/bootstrap/bootstrap-alerts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vendors/bootstrap/bootstrap-radiotoggle.js') }}"></script>
     <script type="text/javascript">
-        $(document).ready(function(){
-    		$("a.colorbox").colorbox({
+    	$(function() {
+            $("a.colorbox").colorbox({
     		    maxWidth: '90%',
     		    maxHeight: '90%'
     		});
-    		$(function() {
-                $( "input.datepicker" ).datepicker({
-                    'dateFormat' : 'yy/mm/dd'
-                });
-            });
-    	});
+        });
     	this.App = this.App || {};
         App.config = {
             env: "{{ app.environment }}",
             activeRoute: "{{ app.request.get('_route') }}",
-            routes: {
-
-            }
+            routes: {}
         }
     </script>
 

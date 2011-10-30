@@ -5,5 +5,5 @@
 {% block page_header %}<h1>{{ post.title }}</h1>{% endblock %}
 
 {% block content %}
-    {{ post|post_html|raw }}
+    {% include 'PhoshMainBundle:Post:products.html.twig' %}
 {% endblock %}

@@ -1,5 +1,6 @@
 {% extends 'PhoshMainBundle:ProductAdmin:layout.html.twig' %}
 
 {% block content_inner %}
-    {% include 'PhoshMainBundle:ProductAdmin:form.html.twig' with {'mode': 'edit'} %}
+    {% include 'PhoshMainBundle:ProductAdmin:form.html.twig' %}
+    {% include 'PhoshMainBundle:ProductAdmin:photosAdmin.html.twig' %}
 {% endblock %}

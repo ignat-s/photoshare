@@ -1,0 +1,78 @@
+{% block scripts %}
+    <script id="photoTmpl" type="text/template">
+        <div class="record" data-record-id="{id}">
+            <div class="photo">
+                <a href="{{ path('photostorage_photo', {'id': 0, 'r': 0}) }}" class="colorbox" rel="{{ product.title }}">
+                    <img src="{{ path('photostorage_photo', {'id': 0, 'w': 100, 'h': 100, 'r': 0}) }}" />
+                </a>
+            </div>
+            <div class="delete">
+                <input type="checkbox" name="delete[{id}]" id="delete_{id}"/>
+                <label for="delete_{id}">&nbsp;delete</label>
+            </div>
+        </div>
+    </script>
+    <script type="text/javascript" src="{{ asset('app/app.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app/router/ProductAdmin.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app/widget/Modal.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app/widget/SelectPhotoDialog.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app/widget/ProductPhotosAdmin.js') }}"></script>
+    <script type="text/javascript">
+        _.extend(App.config.routes,{
+            product_photo_add: '{{ path('product_photo_add', { 'id': product.id ? product.id : 0 }) }}',
+            product_photo_remove: '{{ path('product_photo_remove', { 'id': product.id ? product.id : 0 }) }}',
+            photostorage_filetree: '{{ path('photostorage_filetree') }}',
+            photostorage_photo: '{{ path('photostorage_photo') }}'
+        });
+    </script>
+{% endblock %}
+
+<div id="photos">
+    <ul class="tabs">
+        <li class="active">
+            <a href="#" onclick="return false;">Photos</a>
+        </li>
+    </ul>
+    <img src="{{ asset('blank.png') }}"/>
+    <div class="records">
+    {% for photo in product.photos %}
+        <div class="record" data-record-id="{{ photo.id }}">
+            <div class="photo">
+                <a href="{{ path('photostorage_photo', {'id': photo.id}) }}" class="colorbox" rel="{{ product.title }}">
+                    <img src="{{ path('photostorage_photo', {'id': photo.id, 'w': 100, 'h': 100}) }}" />
+                </a>
+            </div>
+            <div class="delete">
+                <input type="checkbox" name="delete[{{ photo.id }}]" id="delete_{{ photo.id }}"/>
+                <label for="delete_{{ photo.id }}">&nbsp;delete</label>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    <p class="noRecordsFoundMessage {% if product.photos|length %}hide{% endif %}">No photos found</p>
+
+    <button class="btn showAddDialog">Add photo</button>
+    <button class="btn remove danger">Remove</button>
+    <div id="addPhotoDialog" class="modal hide fade">
+        <div class="modal-header">
+            <a href="#" class="close">×</a>
+            <h3>Select image from storage</h3>
+        </div>
+        <div class="modal-body">
+            <div>
+                <div class="fileTree" style="max-height: 200px; overflow: auto; padding-bottom: 5px;"></div>
+                <div class="preview hide"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn secondary cancel">Cancel</button>
+            <button class="btn success proccess hide">Select</button>
+            <div class="rotateAngle btngroup radio" style="display: none;">
+                <button class="btn active" name="rotateAngle" value="0">Don't rotate</button>
+                <button class="btn" name="rotateAngle" value="90cw">90&deg; CW</button>
+                <button class="btn" name="rotateAngle" value="90ccw">90&deg; CCW</button>
+                <button class="btn" name="rotateAngle" value="180">180&deg;</button>
+            </div>
+        </div>
+    </div>
+</div>
