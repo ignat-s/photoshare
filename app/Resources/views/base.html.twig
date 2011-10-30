@@ -61,6 +61,19 @@
             $(function() {
                 $('button.toggle.btn').toggleBtn();
                 $('.radio button.btn').radio();
+                $(':password + span a.toggler').each(function(){
+                    var password = $(this).parent().prev()[0];
+
+                    $(this).click(function(){
+                        if (password.type == 'password') {
+                            password.type = 'text';
+                            $(this).html('Скрыть');
+                        } else {
+                            password.type = 'password';
+                            $(this).html('Показать');
+                        }
+                    })
+                });
             });
             this.App = this.App || {};
             App.config = {

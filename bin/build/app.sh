@@ -9,7 +9,7 @@ project_dir=$(pwd)
 $project_dir/vendor/bundles/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php
 
 # Install assets
-$project_dir/app/console assets:install $project_dir/web
+$project_dir/app/console assets:install --symlink $project_dir/web
 
 # Clear cache
 $project_dir/app/console cache:clear --no-warmup --env prod
