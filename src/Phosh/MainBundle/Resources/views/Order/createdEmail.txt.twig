@@ -10,7 +10,7 @@ Comments:
 
 Post: {{ order.post.title }}, {{ url('post_show', {'id': order.post.id}) }}
 Products:
-{% for product in order.post.products %}
+{% for product in order.products %}
   {{ loop.index }}. {{ product.title }}, {{ url('product_show', {'id': product.id}) }}
 {% endfor %}
 
