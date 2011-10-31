@@ -44,7 +44,7 @@ class OrderType extends AbstractType
             'required' => true,
             'query_builder' => function(EntityRepository $repository) use ($order)
             {
-                $productIds = array();
+                $productIds = array(0);
                 foreach ($order->getPost()->getProducts() as $product) {
                     $productIds[] = $product->getId();
                 }
