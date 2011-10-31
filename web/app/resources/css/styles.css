@@ -136,8 +136,9 @@ footer {
     display: inline-block;
 }
 
-#photos .records .record delete {
+#photos .records .record .delete {
     display: block;
+    clear: both;
 }
 
 #photos .records input {
@@ -175,10 +176,6 @@ footer {
     box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
 }
 
-#photos .records input {
-    display: inline;
-    float: none;
-}
 
 /**
  * Styling post photos on users page
