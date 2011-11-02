@@ -39,7 +39,7 @@ class OrderType extends AbstractType
         ));
         
         if (count($products)) {
-            $products->add('products', 'entity', array(
+            $builder->add('products', 'entity', array(
                 'class' => Product::CLASS_NAME,
                 'property' => 'title',
                 'label' => 'Products',
