@@ -165,12 +165,12 @@ class ProductAdminController extends BaseController
             }
         }
 
-        $products = $qb->orderBy('product.title', 'ASC')
-                ->setParameter('titleMask', \mb_strtolower(sprintf('%%%s%%', $term)))
-                ->getQuery()->execute();
+        $query = $qb->orderBy('product.title', 'ASC')
+                ->setParameter('titleMask', \strtolower(sprintf('%%%s%%', $term)))
+                ->getQuery();
 
         return array(
-            'products' => $products,
+            'products' => $query->execute(),
         );
     }
 

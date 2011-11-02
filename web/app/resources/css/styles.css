@@ -188,7 +188,7 @@ footer {
 .post .products .product .order label {
     margin: 0;
     padding: 0;
-    color: #d3d3d3;
+    color: #c0c0c0;
     text-align: left;
     width: auto;
     display: inline;
@@ -198,4 +198,16 @@ footer {
 
 .post .order-form {
     padding-top: 15px;
+}
+
+/**
+ * Styling products
+ */
+.products .product {
+  margin-bottom: 15px;
+  padding: 10px 20px;
+}
+
+.products .product:nth-child(odd) {
+  background-color: #fafafa;
 }

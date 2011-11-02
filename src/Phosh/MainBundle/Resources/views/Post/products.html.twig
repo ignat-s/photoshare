@@ -1,6 +1,6 @@
 <div class="products">
     {% for product in post.products %}
-        <div class="product">
+        <div class="product {% if loop.index is odd %}odd{% endif %}">
             <h2>{{ product.title }}</h2>
             {{ product.description|raw }}
             <div class="media-grid photos">
@@ -78,11 +78,6 @@
                 }
             })
             $(orderForm).submit(function() {
-                if (!$('.post .order-form form input:checked').length) {
-                    setFormMessage('error', 'Select at least one product');
-                    return false;
-                }
-
                 return true;
             });
 

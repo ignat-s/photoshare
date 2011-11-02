@@ -17,7 +17,7 @@
                     /
                 {% endfor %}
             {% endif %}
-        Project name
+        Milliarda
     {% endblock %}
     </title>
 
@@ -61,19 +61,6 @@
             $(function() {
                 $('button.toggle.btn').toggleBtn();
                 $('.radio button.btn').radio();
-                $(':password + span a.toggler').each(function(){
-                    var password = $(this).parent().prev()[0];
-
-                    $(this).click(function(){
-                        if (password.type == 'password') {
-                            password.type = 'text';
-                            $(this).html('Скрыть');
-                        } else {
-                            password.type = 'password';
-                            $(this).html('Показать');
-                        }
-                    })
-                });
             });
             this.App = this.App || {};
             App.config = {
@@ -100,7 +87,7 @@
     <div class="topbar">
         <div class="fill">
             <div class="container">
-                <a class="brand" href="{{ path('post_index') }}">Project name</a>
+                <a class="brand" href="{{ path('post_index') }}">Milliarda</a>
                 <ul class="nav">
                     <li {% if app.request.get('_route') in ['post_index', 'post_show', 'post_create', 'post_edit'] %}
                         class="active"
@@ -124,36 +111,33 @@
 
     <div class="container">
         <div class="content">
-            {% if app.request.get('_route') != 'index' %}
-                <div class="page-header">
-                {% block page_header %}
-                    {% if page_title is defined %}
-                        <h1>{{ page_title }} {% if is_granted('ROLE_ADMIN') %}<small>Administration</small>{% endif %}</h1>
-                    {% endif %}
-                {% endblock %}
-                </div>
-
-                {% if is_granted('ROLE_ADMIN') and breadcrumbs is defined and breadcrumbs|length %}
-                    <ul class="breadcrumb">
-                        <li><a href="{{ path('post_index') }}">Home</a> <span class="divider">/</span></li>
-                        {% for breadcrumb in breadcrumbs %}
-                            <li>
-                                {% if breadcrumb.path is defined %}
-                                    {% if not loop.last and (breadcrumb.role is not defined or is_granted(breadcrumb.role)) %}
-                                        <a href="{{ breadcrumb.path }}">{{ breadcrumb.name }}</a><span class="divider">/</span>
-                                    {% else %}
-                                        {{ breadcrumb.name }}
-                                    {% endif %}
-                                {% elseif breadcrumb.name is defined %}
-                                    {{ breadcrumb.name }}
-                                {% else %}
-                                    {{ breadcrumb }}
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
+            <div class="page-header">
+            {% block page_header %}
+                {% if page_title is defined %}
+                    <h1>{{ page_title }} {% if is_granted('ROLE_ADMIN') %}<small>Administration</small>{% endif %}</h1>
                 {% endif %}
+            {% endblock %}
+            </div>
 
+            {% if is_granted('ROLE_ADMIN') and breadcrumbs is defined and breadcrumbs|length %}
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('post_index') }}">Home</a> <span class="divider">/</span></li>
+                    {% for breadcrumb in breadcrumbs %}
+                        <li>
+                            {% if breadcrumb.path is defined %}
+                                {% if not loop.last and (breadcrumb.role is not defined or is_granted(breadcrumb.role)) %}
+                                    <a href="{{ breadcrumb.path }}">{{ breadcrumb.name }}</a><span class="divider">/</span>
+                                {% else %}
+                                    {{ breadcrumb.name }}
+                                {% endif %}
+                            {% elseif breadcrumb.name is defined %}
+                                {{ breadcrumb.name }}
+                            {% else %}
+                                {{ breadcrumb }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
             {% endif %}
 
             {% if app.session.hasFlash('warning') %}
@@ -194,7 +178,7 @@
 
         {% if show_footer %}
         <footer>
-            <p>&copy; Company 2011</p>
+            <p>&copy; Milliarda 2011</p>
         </footer>
         {% endif %}
 

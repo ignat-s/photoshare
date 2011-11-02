@@ -10,6 +10,7 @@ class Post
 
     private $id;
     private $title;
+    private $description;
     private $body;
     private $token;
     private $owner;
@@ -43,6 +44,16 @@ class Post
     public function getTitle()
     {
         return $this->title;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     public function setBody($body)
@@ -149,5 +160,10 @@ class Post
     public function isExpired()
     {
         return $this->expiredAt <= new \DateTime();
+    }
+
+    public function isDescriptionOrProductFilled()
+    {
+        return count($this->products) > 0 || $this->description;
     }
 }

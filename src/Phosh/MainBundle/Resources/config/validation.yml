@@ -6,6 +6,9 @@ Phosh\MainBundle\Entity\Post:
       - MaxLength: 255
     expiredAt:
       - NotBlank: ~
+  getters:
+     descriptionOrProductFilled:
+      - "True": { message: "Please add at least one product or fill description" }
 
 Phosh\MainBundle\Entity\Product:
   properties:
@@ -24,6 +27,3 @@ Phosh\MainBundle\Entity\Order:
       - MaxLength: 255
     post:
       - NotBlank: ~
-  getters:
-     productsNotEmpty:
-      - "True": { message: "Please add at least one product" }

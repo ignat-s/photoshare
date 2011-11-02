@@ -12,8 +12,10 @@ Post: {{ order.post.title }}, {{ url('post_show', {'id': order.post.id}) }}
 Products:
 {% for product in order.products %}
   {{ loop.index }}. {{ product.title }}, {{ url('product_show', {'id': product.id}) }}
+{% else %}
+No products selected
 {% endfor %}
 
 Regards,
-the Team.
+Milliarda Team.
 {% endautoescape %}

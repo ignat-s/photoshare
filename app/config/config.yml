@@ -48,6 +48,7 @@ doctrine:
         port:     %database_port%
         user:     %database_user%
         password: %database_password%
+        charset:  %database_charset%
 
   orm:
     auto_generate_proxy_classes: %kernel.debug%

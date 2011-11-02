@@ -31,6 +31,7 @@ Phosh\MainBundle\Entity\Order:
       joinColumn:
         name: post_id
         referencedColumnName: id
+        onDelete: "CASCADE"
 
   manyToMany:
     products:

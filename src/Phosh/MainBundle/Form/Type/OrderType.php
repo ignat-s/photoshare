@@ -17,6 +17,7 @@ class OrderType extends AbstractType
          * @var $order \Phosh\MainBundle\Entity\Order
          */
         $order = $builder->getData();
+        $products = $order->getPost()->getProducts();
 
         $builder->add('customer', 'text', array(
             'label' => 'Name',
@@ -35,26 +36,30 @@ class OrderType extends AbstractType
                 'class' => 'xxlarge',
             ),
             'required' => false,
-        ))->add('products', 'entity', array(
-            'class' => Product::CLASS_NAME,
-            'property' => 'title',
-            'label' => 'Products',
-            'multiple' => true,
-            'expanded' => true,
-            'required' => true,
-            'query_builder' => function(EntityRepository $repository) use ($order)
-            {
-                $productIds = array(0);
-                foreach ($order->getPost()->getProducts() as $product) {
-                    $productIds[] = $product->getId();
-                }
-                $qb = $repository->createQueryBuilder('p');
-                $qb->where($qb->expr()->in('p.id', $productIds))
-                ->orderBy('p.title');
-
-                return $qb;
-            },
         ));
+        
+        if (count($products)) {
+            $products->add('products', 'entity', array(
+                'class' => Product::CLASS_NAME,
+                'property' => 'title',
+                'label' => 'Products',
+                'multiple' => true,
+                'expanded' => true,
+                'required' => true,
+                'query_builder' => function(EntityRepository $repository) use ($products)
+                {
+                    $productIds = array(0);
+                    foreach ($products as $product) {
+                        $productIds[] = $product->getId();
+                    }
+                    $qb = $repository->createQueryBuilder('p');
+                    $qb->where($qb->expr()->in('p.id', $productIds))
+                    ->orderBy('p.title');
+
+                    return $qb;
+                },
+            ));
+        }
     }
 
     public function getName()

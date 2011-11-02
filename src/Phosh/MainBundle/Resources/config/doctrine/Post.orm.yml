@@ -16,6 +16,9 @@ Phosh\MainBundle\Entity\Post:
     title:
       type: string
       length: 255
+    description:
+      type: text
+      nullable: true
     token:
       type: string
       lenght: 255

@@ -1,13 +1,5 @@
 {% extends 'MopaBootstrapBundle:Form:fields.html.twig' %}
 
-{% block password_widget %}
-{% spaceless %}
-    {% set type = type|default('password') %}
-    {{ block('field_widget') }}
-    <span class="help-inline"><a class="toggler" href="javascript:void(0)">Показать</a></span>
-{% endspaceless %}
-{% endblock password_widget %}
-
 {% block choice_widget %}
 {% spaceless %}
     {% if expanded %}
