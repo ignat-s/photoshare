@@ -1,0 +1,23 @@
+Phosh\MainBundle\Entity\ConfigAttr:
+  type: entity
+  table: config_attrs
+  uniqueConstraints:
+    config_attrs_name_unique_idx:
+      columns: name
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    name:
+      type: string
+      length: 255
+    value:
+      type: text
+      nullable: true
+    title:
+      type: string
+      length: 255

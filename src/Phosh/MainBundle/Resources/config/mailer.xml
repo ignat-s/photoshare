@@ -8,23 +8,15 @@
         <parameter key="phosh_main.mailer.class">Phosh\MainBundle\Mailer\Mailer</parameter>
 
         <parameter key="phosh_main.order_created.template">PhoshMainBundle:Order:createdEmail.txt.twig</parameter>
-        <parameter key="phosh_main.order_created.from_email"></parameter>
-        <parameter key="phosh_main.order_created.to_email"></parameter>
     </parameters>
 
     <services>
         <service id="phosh_main.mailer" class="%phosh_main.mailer.class%">
             <argument type="service" id="mailer" />
-            <argument type="service" id="router" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="templating" />
             <argument type="collection">
                 <argument key="order_created.template">%phosh_main.order_created.template%</argument>
-                <argument key="from_email" type="collection">
-                    <argument key="order_created">%phosh_main.order_created.from_email%</argument>
-                </argument>
-                <argument key="to_email" type="collection">
-                    <argument key="order_created">%phosh_main.order_created.to_email%</argument>
-                </argument>
             </argument>
         </service>
     </services>

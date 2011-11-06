@@ -3,21 +3,22 @@
 namespace Phosh\MainBundle\Mailer;
 
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\Routing\RouterInterface;
+use Doctrine\ORM\EntityManager;
 
 use Phosh\MainBundle\Entity\Order;
+use Phosh\MainBundle\Entity\ConfigAttr;
 
 class Mailer
 {
     protected $mailer;
-    protected $router;
+    protected $entityManager;
     protected $templating;
     protected $parameters;
 
-    public function __construct($mailer, RouterInterface $router, EngineInterface $templating, array $parameters)
+    public function __construct($mailer, EntityManager $entityManager, EngineInterface $templating, array $parameters)
     {
         $this->mailer = $mailer;
-        $this->router = $router;
+        $this->entityManager = $entityManager;
         $this->templating = $templating;
         $this->parameters = $parameters;
     }
@@ -28,7 +29,13 @@ class Mailer
         $rendered = $this->templating->render($template, array(
             'order' => $order,
         ));
-        $this->sendEmailMessage($rendered, $this->parameters['from_email']['order_created'], $this->parameters['to_email']['order_created']);
+
+        $orderCreatedFromEmail = $this->findConfigAttrByName('order_created_from_email');
+        $orderCreatedToEmail = $this->findConfigAttrByName('order_created_to_email');
+
+        if ($orderCreatedFromEmail && $orderCreatedToEmail) {
+            $this->sendEmailMessage($rendered, $orderCreatedFromEmail->getValue(), $orderCreatedToEmail->getValue());
+        }
     }
 
     protected function sendEmailMessage($renderedTemplate, $fromEmail, $toEmail)
@@ -44,5 +51,14 @@ class Mailer
             ->setBody($body);
 
         $this->mailer->send($message);
+    }
+
+    /**
+     * @param $name
+     * @return \Phosh\MainBundle\Entity\ConfigAttr
+     */
+    private function findConfigAttrByName($name)
+    {
+        return $this->entityManager->getRepository(ConfigAttr::CLASS_NAME)->findOneByName($name);
     }
 }

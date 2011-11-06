@@ -60,7 +60,7 @@ class ProductAdminController extends BaseController
     }
 
     /**
-     * @Route("/create", name="product_create", requirements={"id" = "\d+"})
+     * @Route("/create", name="product_create")
      * @Template()
      */
     public function createAction()

@@ -95,6 +95,9 @@
                     <li {% if app.request.get('_route') in ['product_index', 'product_show', 'product_create', 'product_edit'] %}
                         class="active"
                     {% endif %}><a href="{{ path('product_index') }}">Products</a></li>
+                    <li {% if app.request.get('_route') in ['config_attr_index', 'config_attr_show', 'config_attr_create', 'config_attr_edit'] %}
+                        class="active"
+                    {% endif %}><a href="{{ path('config_attr_index') }}">Config</a></li>
                 </ul>
                 <ul class="nav secondary-nav">
                     {% if is_granted('ROLE_USER') %}

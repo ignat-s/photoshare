@@ -27,3 +27,16 @@ Phosh\MainBundle\Entity\Order:
       - MaxLength: 255
     post:
       - NotBlank: ~
+
+
+Phosh\MainBundle\Entity\ConfigAttr:
+  properties:
+    name:
+      - NotBlank: ~
+      - MinLength: 1
+      - MaxLength: 255
+      - Regex: "/^[a-z][\w_-]*$/i"\
+    title:
+      - NotBlank: ~
+      - MinLength: 1
+      - MaxLength: 255

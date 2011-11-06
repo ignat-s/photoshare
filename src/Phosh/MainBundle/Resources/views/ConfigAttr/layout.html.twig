@@ -1,0 +1,36 @@
+{% extends '::base.html.twig' %}
+{% from 'PhoshMainBundle::tabs.html.twig' import tab, delete_tab %}
+
+{% set active_route = app.request.get('_route') %}
+
+{% set route_titles = {
+    'config_attr_index': 'Config',
+    'config_attr_create': 'Add config attribute',
+    'config_attr_edit': 'Edit config attribute',
+    'config_attr_show': config_attr is defined ? config_attr.name : ''
+} %}
+{% set page_title = (route_titles[active_route] is defined ? route_titles[active_route] : (config_attr is defined ? config_attr.name : route_titles['config_attr_index'])) %}
+
+{% set breadcrumbs = [{ 'name': 'Config', 'path': path('config_attr_index') }] %}
+{% if config_attr is defined and config_attr.id %}
+    {% set breadcrumbs = breadcrumbs|merge([{ 'name': config_attr.name, 'path': path('config_attr_show', { 'id' : config_attr.id }) }]) %}
+{% endif %}
+{% if active_route not in ['config_attr_index', 'config_attr_show'] %}
+    {% set breadcrumbs = breadcrumbs|merge([{ 'name': page_title, 'path': app.request.basePath }]) %}
+{% endif %}
+
+{% block content %}
+    {% block content_inner %}{% endblock %}
+{% endblock %}
+
+{% block page_actions %}
+    <ul class="tabs">
+        {{ tab('List', 'config_attr_index') }}
+        {{ tab('Add', 'config_attr_create') }}
+        {% if config_attr is defined and config_attr.id %}
+            {{ tab('Show', 'config_attr_show', {'id': config_attr.id }) }}
+            {{ tab('Edit', 'config_attr_edit', {'id': config_attr.id }) }}
+            {{ delete_tab('Delete', 'config_attr_delete', {'id': config_attr.id }, 'Are you sure you want to delete config attribute?') }}
+        {% endif %}
+    </ul>
+{% endblock %}

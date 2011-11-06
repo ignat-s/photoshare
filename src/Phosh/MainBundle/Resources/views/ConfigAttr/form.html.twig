@@ -1,0 +1,11 @@
+<form action="{{ path('config_attr_' ~ (config_attr.id ? 'edit' : 'create'), { 'id': config_attr.id }) }}" method="post">
+    {{ form_errors(form) }}
+    <fieldset>
+        {{ form_rest(form) }}
+        
+        <div class="actions">
+            <input type="submit" name="submit" value="Submit" class="btn primary"/>
+            <input type="reset" name="submit" value="Reset" class="btn"/>
+        </div>
+    </fieldset>
+</form>

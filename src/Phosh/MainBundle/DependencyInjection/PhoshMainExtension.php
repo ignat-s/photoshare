@@ -25,8 +25,7 @@ class PhoshMainExtension extends Extension
 
         $container->setParameter('phosh.storage_dir', $config['storage_dir']);
         $container->setParameter('phosh.thumbs_dir', $config['thumbs_dir']);
-        $container->setParameter('phosh_main.order_created.from_email', $config['order_created_from_email']);
-        $container->setParameter('phosh_main.order_created.to_email', $config['order_created_to_email']);
+        $container->setParameter('phosh_main.required_config_attrs', $config['required_config_attrs']);
     }
 
     public function getAlias()

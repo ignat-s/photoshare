@@ -10,7 +10,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Phosh\MainBundle\Entity\Photo;
 
 /**
- * @Route("/photostorage")
+ * @Route("/admin/photostorage")
  * @Secure(roles="ROLE_ADMIN")
  */
 class PhotostorageController extends BaseController

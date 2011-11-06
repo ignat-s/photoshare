@@ -17,8 +17,9 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('storage_dir')->isRequired()->end()
                 ->scalarNode('thumbs_dir')->isRequired()->end()
-                ->scalarNode('order_created_from_email')->isRequired()->end()
-                ->scalarNode('order_created_to_email')->isRequired()->end()
+                ->arrayNode('required_config_attrs')
+                    ->prototype('scalar')->end()
+                ->end()
             ->end()
         ;
 

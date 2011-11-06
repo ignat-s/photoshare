@@ -47,7 +47,7 @@ class PostAdminController extends BaseController
     }
 
     /**
-     * @Route("/create", name="post_create", requirements={"id" = "\d+"})
+     * @Route("/create", name="post_create")
      * @Template()
      */
     public function createAction()

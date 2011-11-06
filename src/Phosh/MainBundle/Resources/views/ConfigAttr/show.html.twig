@@ -1,0 +1,20 @@
+{% extends 'PhoshMainBundle:ConfigAttr:layout.html.twig' %}
+
+{% block content_inner %}
+
+    <table>
+        <tr>
+            <td>Name</td>
+            <td>{{ config_attr.name }}</td>
+        </tr>
+        <tr>
+            <td>Title</td>
+            <td>{{ config_attr.title }}</td>
+        </tr>
+        <tr>
+            <td>Value</td>
+            <td>{{ config_attr.value }}</td>
+        </tr>
+    </table>
+
+{% endblock %}

@@ -80,8 +80,7 @@ knp_menu:
 phosh_main:
   storage_dir: %kernel.root_dir%/../photostorage
   thumbs_dir: %kernel.cache_dir%/thumbs
-  order_created_from_email: %email_from%
-  order_created_to_email: %email_to%
+  required_config_attrs: [order_created_to_email, order_created_from_email]
 
 mopa_bootstrap:
   form:
