@@ -75,7 +75,7 @@ class PostController extends BaseController
         $this->assertNotNull($photo);
         $this->assertTrue($post->hasProduct($photo->getProduct()));
 
-        $imagePath = $this->getPhotoStorage()->getPhotoPath($photo->getPath(), $photo->getRotateAngle());
+        $imagePath = $this->getPhotoStorage()->getPhotoPath($photo->getPath(), $format, $photo->getRotateAngle());
         return $this->getImageResponseFactory()->createImageResponse($imagePath, $format);
     }
 
