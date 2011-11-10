@@ -49,7 +49,7 @@ Phosh\MainBundle\Entity\Post:
 
   manyToMany:
     products:
-      cascade: ["all"]
+      cascade: ["persist"]
       targetEntity: Product
       joinTable:
         name: post_products

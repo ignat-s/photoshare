@@ -74,3 +74,18 @@
     {% endif %}
 {% endspaceless %}
 {% endblock form_errors %}
+
+{% block generic_label %}
+{% spaceless %}
+    {% if required %}
+        {% set attr = attr|merge({'class': attr.class|default('') ~ ' required'}) %}
+    {% endif %}
+    <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+    {% set fos_user_label = id|trans([], 'FOSUserBundle') %}
+    {{ id == fos_user_label ? label|trans : fos_user_label }}
+    {% if help_label %}{# TODO erstzten durch function form_help) #}
+        <span class="help-block">{{ help_label|trans }}</span>
+    {% endif %}
+    </label>
+{% endspaceless %}
+{% endblock %}
