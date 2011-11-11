@@ -80,6 +80,7 @@ knp_menu:
 phosh_main:
   storage_dir: %kernel.root_dir%/../photostorage
   thumbs_dir: %kernel.cache_dir%/thumbs
+  mailer_sender: no-reply@milliarda.com
 
 mopa_bootstrap:
   form:

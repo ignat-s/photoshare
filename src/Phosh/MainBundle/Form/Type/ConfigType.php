@@ -10,12 +10,7 @@ class ConfigType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('orderCreatedFromEmail', 'email', array(
-            'label' => 'Order created "from" E-mail',
-            'attr' => array(
-                'class' => 'xxlarge',
-            ),
-        ))->add('orderCreatedToEmail', 'email', array(
+        $builder->add('orderCreatedToEmail', 'email', array(
             'label' => 'Order created "to" E-mail',
             'attr' => array(
                 'class' => 'xxlarge',

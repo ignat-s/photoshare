@@ -25,7 +25,7 @@ class PhoshMainExtension extends Extension
 
         $container->setParameter('phosh.storage_dir', $config['storage_dir']);
         $container->setParameter('phosh.thumbs_dir', $config['thumbs_dir']);
-        $container->setParameter('phosh_main.required_config_attrs', $config['required_config_attrs']);
+        $container->setParameter('phosh.mailer.sender', $config['mailer_sender']);
     }
 
     public function getAlias()

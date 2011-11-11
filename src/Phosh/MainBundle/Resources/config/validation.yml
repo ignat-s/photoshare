@@ -39,7 +39,5 @@ Phosh\MainBundle\Entity\ConfigAttr:
 
 Phosh\MainBundle\Form\Model\Config:
   properties:
-    orderCreatedFromEmail:
-      - Email: ~
     orderCreatedToEmail:
       - Email: ~

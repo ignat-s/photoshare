@@ -78,7 +78,7 @@ class OrderController extends BaseController
      */
     private function getMailer()
     {
-        return $this->get('phosh_main.mailer');
+        return $this->get('phosh.mailer');
     }
 
     private function findOrder($id)

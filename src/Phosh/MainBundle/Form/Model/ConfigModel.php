@@ -6,7 +6,6 @@ class ConfigModel
 {
     const CLASS_NAME = 'Phosh\MainBundle\Form\Model\ConfigModel';
 
-    public $orderCreatedFromEmail;
     public $orderCreatedToEmail;
     public $indexPageContent;
 }

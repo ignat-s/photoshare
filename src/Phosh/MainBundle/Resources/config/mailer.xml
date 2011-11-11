@@ -5,18 +5,21 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="phosh_main.mailer.class">Phosh\MainBundle\Mailer\Mailer</parameter>
-
-        <parameter key="phosh_main.order_created.template">PhoshMainBundle:Order:createdEmail.txt.twig</parameter>
+        <parameter key="phosh.mailer.sender"></parameter>
+        <parameter key="phosh.mailer.class">Phosh\MainBundle\Mailer\Mailer</parameter>
+        <parameter key="phosh.order_created.template">PhoshMainBundle:Order:createdEmail.txt.twig</parameter>
     </parameters>
 
     <services>
-        <service id="phosh_main.mailer" class="%phosh_main.mailer.class%">
+        <service id="phosh.mailer" class="%phosh.mailer.class%">
             <argument type="service" id="mailer" />
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="templating" />
             <argument type="collection">
-                <argument key="order_created.template">%phosh_main.order_created.template%</argument>
+                <argument key="order_created.template">%phosh.order_created.template%</argument>
+                <argument key="from_email" type="collection">
+                    <argument key="order_created">%phosh.mailer.sender%</argument>
+                </argument>
             </argument>
         </service>
     </services>

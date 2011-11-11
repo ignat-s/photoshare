@@ -54,7 +54,6 @@ class ConfigController extends BaseController
     {
         $config = new ConfigModel();
         $config->indexPageContent = $this->getConfigAttrValue('indexPageContent');
-        $config->orderCreatedFromEmail = $this->getConfigAttrValue('orderCreatedFromEmail');
         $config->orderCreatedToEmail = $this->getConfigAttrValue('orderCreatedToEmail');
 
         return $config;
@@ -63,7 +62,6 @@ class ConfigController extends BaseController
     private function saveConfigModel(ConfigModel $config)
     {
         $this->getOrCreateConfigAttr('indexPageContent')->setValue($config->indexPageContent);
-        $this->getOrCreateConfigAttr('orderCreatedFromEmail')->setValue($config->orderCreatedFromEmail);
         $this->getOrCreateConfigAttr('orderCreatedToEmail')->setValue($config->orderCreatedToEmail);
 
         return $config;
