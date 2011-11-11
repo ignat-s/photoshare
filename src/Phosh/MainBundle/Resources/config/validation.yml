@@ -36,7 +36,10 @@ Phosh\MainBundle\Entity\ConfigAttr:
       - MinLength: 1
       - MaxLength: 255
       - Regex: "/^[a-z][\w_-]*$/i"\
-    title:
-      - NotBlank: ~
-      - MinLength: 1
-      - MaxLength: 255
+
+Phosh\MainBundle\Form\Model\Config:
+  properties:
+    orderCreatedFromEmail:
+      - Email: ~
+    orderCreatedToEmail:
+      - Email: ~

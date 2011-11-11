@@ -20,7 +20,7 @@ use Phosh\MainBundle\Pager\Pager;
 class ProductAdminController extends BaseController
 {
     /**
-     * @Route("", name="product_index", requirements={"_method"="GET"})
+     * @Route("/", name="product_index", requirements={"_method"="GET"})
      * @Template()
      */
     public function indexAction()
@@ -48,7 +48,7 @@ class ProductAdminController extends BaseController
     }
 
     /**
-     * @Route("/{id}", name="product_show", requirements={"_method"="GET", "id" = "\d+"})
+     * @Route("/{id}/", name="product_show", requirements={"_method"="GET", "id" = "\d+"})
      * @ParamConverter("id", class="PhoshMainBundle:Product")
      * @Template()
      */
@@ -60,7 +60,7 @@ class ProductAdminController extends BaseController
     }
 
     /**
-     * @Route("/create", name="product_create")
+     * @Route("/create/", name="product_create")
      * @Template()
      */
     public function createAction()
@@ -94,7 +94,7 @@ class ProductAdminController extends BaseController
     }
 
     /**
-     * @Route("/{id}/edit", name="product_edit", requirements={"id" = "\d+"})
+     * @Route("/{id}/edit/", name="product_edit", requirements={"id" = "\d+"})
      * @ParamConverter("id", class="PhoshMainBundle:Product")
      * @Template()
      */
@@ -122,7 +122,7 @@ class ProductAdminController extends BaseController
     }
 
     /**
-     * @Route("/{id}/delete", name="product_delete", requirements={"id" = "\d+"})
+     * @Route("/{id}/delete/", name="product_delete", requirements={"id" = "\d+"})
      * @ParamConverter("id", class="PhoshMainBundle:Product")
      */
     public function deleteAction(Product $product)
@@ -140,7 +140,7 @@ class ProductAdminController extends BaseController
     }
 
     /**
-     * @Route("/search", name="product_search", defaults={"_format"="json"})
+     * @Route("/search/", name="product_search", defaults={"_format"="json"})
      * @Template()
      */
     public function searchAction()
@@ -181,6 +181,10 @@ class ProductAdminController extends BaseController
      */
     public function photoAddAction($id)
     {
+        if ($this->getRequest()->getRequestFormat() == 'html') {
+            return $this->forward('PhoshMainBundle:ProductAdmin:show', array('id' => $id));
+        }
+
         $type = $this->getRequest()->get('type');
         $path = $this->getRequest()->get('path');
 
@@ -247,6 +251,9 @@ class ProductAdminController extends BaseController
      */
     public function photoRemoveAction($id)
     {
+        if ($this->getRequest()->getRequestFormat() == 'html') {
+            return $this->forward('PhoshMainBundle:ProductAdmin:show', array('id' => $id));
+        }
         $photoIds = $this->getRequest()->get('photos');
 
         if ($id) {

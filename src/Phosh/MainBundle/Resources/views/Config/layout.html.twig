@@ -1,0 +1,15 @@
+{% extends '::base.html.twig' %}
+{% from 'PhoshMainBundle::tabs.html.twig' import tab, delete_tab %}
+
+{% set active_route = app.request.get('_route') %}
+
+{% set route_titles = {
+    'config_edit': 'Config'
+} %}
+{% set page_title = route_titles['config_edit'] %}
+
+{% set breadcrumbs = [{ 'name': 'Config', 'path': path('config_edit') }] %}
+
+{% block content %}
+    {% block content_inner %}{% endblock %}
+{% endblock %}

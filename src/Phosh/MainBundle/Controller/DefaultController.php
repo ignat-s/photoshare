@@ -5,6 +5,8 @@ namespace Phosh\MainBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use Phosh\MainBundle\Entity\ConfigAttr;
+
 class DefaultController extends BaseController
 {
     /**
@@ -13,6 +15,10 @@ class DefaultController extends BaseController
      */
     public function indexAction()
     {
-        return array();
+        $contentContigAttr = $this->getRepository(ConfigAttr::CLASS_NAME)->findOneByName('indexPageContent');
+
+        return array(
+            'content' => $contentContigAttr ? $contentContigAttr->getValue() : '',
+        );
     }
 }

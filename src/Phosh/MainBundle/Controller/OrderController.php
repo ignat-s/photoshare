@@ -18,7 +18,7 @@ use Phosh\MainBundle\Form\Type\OrderType;
 class OrderController extends BaseController
 {
     /**
-     * @Route("/create_order", name="order_create", requirements={"_method"="POST"})
+     * @Route("/create_order/", name="order_create", requirements={"_method"="POST"})
      * @ParamConverter("token", class="PhoshMainBundle:Post")
      * @Template()
      */
@@ -60,7 +60,7 @@ class OrderController extends BaseController
     }
 
     /**
-     * @Route("/order_received/{orderNumber}", name="order_received", requirements={"orderNumber"="\d+"})
+     * @Route("/order_received/{orderNumber}/", name="order_received", requirements={"orderNumber"="\d+"})
      * @ParamConverter("token", class="PhoshMainBundle:Post")
      * @Template()
      */

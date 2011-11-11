@@ -155,7 +155,7 @@ App.widget.PostProductsAdmin = Backbone.View.extend({
         return false;
     },
     addProduct: function(productData) {
-        var me, row, productEl, detailsUrl, removeUrl;
+        var me, row, productEl, detailsUrl, removeUrl, editUrl;
 
         me = this;
         row = _.extend(productData, {});
@@ -165,8 +165,11 @@ App.widget.PostProductsAdmin = Backbone.View.extend({
         productEl = $(me.recordTemplate(row)).appendTo(me.recordsEl).hide().slideDown('fast');
         me.bindProductEvents(productEl);
 
-        detailsUrl = $('a.btn.details',productEl).attr('href').replace(/\/0$/, '/' + productData.id);
+        detailsUrl = $('a.btn.details',productEl).attr('href').replace(/\/0\/$/, '/' + productData.id + '/');
         $('a.btn.details',productEl).attr('href', detailsUrl);
+
+        editUrl = $('a.btn.edit', productEl).attr('href').replace(/\/0\/edit\/$/, '/' + productData.id + '/edit/');
+        $('a.btn.edit', productEl).attr('href', editUrl);
 
         removeUrl = $('a.btn.remove', productEl).attr('href').replace(/\/0$/, '/' + productData.id);
         $('a.btn.remove', productEl).attr('href', removeUrl);

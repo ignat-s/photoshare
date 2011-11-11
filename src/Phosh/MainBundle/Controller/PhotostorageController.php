@@ -16,7 +16,7 @@ use Phosh\MainBundle\Entity\Photo;
 class PhotostorageController extends BaseController
 {
     /**
-     * @Route("/filetree", name="photostorage_filetree")
+     * @Route("/filetree/", name="photostorage_filetree")
      * @Template()
      */
     public function filetreeAction()

@@ -57,7 +57,7 @@ App.widget.SelectPhotoDialog = Backbone.View.extend({
                 me.resetRotateAngle();
                 var newSelectedElement, elementChanged;
 
-                if ((p.type == 'file' && p.file.split('.').pop().toLowerCase() in { jpg:1, jpeg:1, png:1 }) || p.type == 'dir') {
+                if ((p.type == 'file' && p.file.split('.').pop().toLowerCase() in { jpg:1, jpeg:1, png:1 })) {
                     newSelectedElement = {
                         type: p.type,
                         path: p.file

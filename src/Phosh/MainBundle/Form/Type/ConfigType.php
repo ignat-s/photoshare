@@ -4,40 +4,40 @@ namespace Phosh\MainBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
-use Phosh\MainBundle\Entity\ConfigAttr;
+use Phosh\MainBundle\Form\Model\ConfigModel;
 
-class ConfigAttrType extends AbstractType
+class ConfigType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name', 'text', array(
-            'label' => 'Name',
+        $builder->add('orderCreatedFromEmail', 'email', array(
+            'label' => 'Order created "to" E-mail',
             'attr' => array(
                 'class' => 'xxlarge',
             ),
-        ))->add('title', 'text', array(
-            'label' => 'Title',
+        ))->add('orderCreatedToEmail', 'email', array(
+            'label' => 'Order created "from" E-mail',
             'attr' => array(
                 'class' => 'xxlarge',
             ),
-        ))->add('value', 'text', array(
-            'label' => 'Value',
+        ))->add('indexPageContent', 'textarea', array(
+            'label' => 'Index page content',
             'attr' => array(
                 'class' => 'xxlarge',
             ),
-            'required' => false,
+            'required' => false
         ));
     }
 
     public function getName()
     {
-        return 'phosh_main_config_attr';
+        return 'phosh_main_config';
     }
 
     public function getDefaultOptions(array $options)
     {
         return array(
-            'data_class' => ConfigAttr::CLASS_NAME,
+            'data_class' => ConfigModel::CLASS_NAME,
         );
     }
 }

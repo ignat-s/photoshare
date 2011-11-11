@@ -1,4 +1,8 @@
-<form action="{{ path('config_attr_' ~ (config_attr.id ? 'edit' : 'create'), { 'id': config_attr.id }) }}" method="post">
+{% block scripts %}
+    {% include 'PhoshMainBundle::tinymce.html.twig' %}
+{% endblock %}
+
+<form action="{{ path('config_edit') }}" method="post" class="form-stacked">
     {{ form_errors(form) }}
     <fieldset>
         {{ form_rest(form) }}

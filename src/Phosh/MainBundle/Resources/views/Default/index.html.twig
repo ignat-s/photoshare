@@ -1,8 +1,7 @@
 {% extends '::base.html.twig' %}
 
-{% set page_title = '404 Not Found' %}
+{% set page_title = 'Milliarda' %}
 
 {% block content %}
-    <p>The page you requested cannot be displayed.</p>
-    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+    {{ content|raw }}
 {% endblock %}

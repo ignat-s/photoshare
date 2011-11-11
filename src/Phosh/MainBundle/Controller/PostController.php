@@ -18,7 +18,7 @@ use Phosh\MainBundle\Form\Type\OrderType;
 class PostController extends BaseController
 {
     /**
-     * @Route("", name="post_show_by_token", requirements={"_method"="GET"})
+     * @Route("/", name="post_show_by_token", requirements={"_method"="GET"})
      * @ParamConverter("token", class="PhoshMainBundle:Post")
      * @Template()
      */

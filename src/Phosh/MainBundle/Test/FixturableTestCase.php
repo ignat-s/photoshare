@@ -7,7 +7,7 @@ use Phosh\MainBundle\Test\Fixtures\FixturesManager;
 class FixturableTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
     /**
-     * @var \Emp\MarketBundle\Test\FixturesManager
+     * @var \Phosh\MainBundle\Test\FixturesManager
      */
     static private $fixtures;
     static private $em;
@@ -32,7 +32,7 @@ class FixturableTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCas
 	}
 
     /**
-     * @return \Emp\MarketBundle\Test\FixturesManager
+     * @return \Phosh\MainBundle\Test\FixturesManager
      */
     protected function getFixturesManager()
     {

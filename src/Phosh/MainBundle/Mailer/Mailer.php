@@ -30,8 +30,8 @@ class Mailer
             'order' => $order,
         ));
 
-        $orderCreatedFromEmail = $this->findConfigAttrByName('order_created_from_email');
-        $orderCreatedToEmail = $this->findConfigAttrByName('order_created_to_email');
+        $orderCreatedFromEmail = $this->findConfigAttrValueByName('orderCreatedFromEmail');
+        $orderCreatedToEmail = $this->findConfigAttrValueByName('orderCreatedToEmail');
 
         if ($orderCreatedFromEmail && $orderCreatedToEmail) {
             $this->sendEmailMessage($rendered, $orderCreatedFromEmail->getValue(), $orderCreatedToEmail->getValue());
@@ -55,10 +55,13 @@ class Mailer
 
     /**
      * @param $name
-     * @return \Phosh\MainBundle\Entity\ConfigAttr
      */
-    private function findConfigAttrByName($name)
+    private function findConfigAttrValueByName($name)
     {
-        return $this->entityManager->getRepository(ConfigAttr::CLASS_NAME)->findOneByName($name);
+        $configAttr = $this->entityManager->getRepository(ConfigAttr::CLASS_NAME)->findOneByName($name);
+        if ($configAttr) {
+            return $configAttr->getValue();
+        }
+        return null;
     }
 }

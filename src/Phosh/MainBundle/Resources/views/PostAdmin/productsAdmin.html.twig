@@ -7,6 +7,7 @@
             </div>
             <div class="well">
                 <a href="{{ path('product_show', {'id': 0}) }}" class="btn details" title="Open product details page in this window" >Details page</a>
+                <a href="{{ path('product_edit', {'id': 0}) }}" class="btn info edit" title="Open product edit page in this window" >Edit</a>
                 <a href="{{ path('post_product_remove', {'id': post.id ? post.id : 0, 'productId': 0}) }}" title="Remove this product from post" class="btn danger remove">Remove</a>
             </div>
         </div>
@@ -45,7 +46,7 @@
             </div>
             <div class="well">
                 <a href="{{ path('product_show', {'id': product.id}) }}" class="btn" title="Open product details page in this window" >Details page</a>
-                <a href="{{ path('product_edit', {'id': product.id}) }}" class="btn info" title="Open product edit page in this window" >Edit</a>
+                <a href="{{ path('product_edit', {'id': product.id}) }}" class="btn info edit" title="Open product edit page in this window" >Edit</a>
                 <a href="{{ path('post_product_remove', {'id': post.id, 'productId': product.id}) }}" title="Remove this product from post" value="remove" class="btn danger remove">Remove</a>
             </div>
         </div>

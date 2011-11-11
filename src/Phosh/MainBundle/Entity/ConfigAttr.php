@@ -9,7 +9,6 @@ class ConfigAttr
     private $id;
     private $name;
     private $value;
-    private $title;
 
     public function setId($id)
     {

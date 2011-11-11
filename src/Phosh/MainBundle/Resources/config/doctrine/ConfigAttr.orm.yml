@@ -18,6 +18,3 @@ Phosh\MainBundle\Entity\ConfigAttr:
     value:
       type: text
       nullable: true
-    title:
-      type: string
-      length: 255

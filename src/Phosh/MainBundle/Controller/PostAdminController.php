@@ -18,7 +18,7 @@ use Phosh\MainBundle\Form\Type\PostType;
 class PostAdminController extends BaseController
 {
     /**
-     * @Route("", name="post_index", requirements={"_method"="GET"})
+     * @Route("/", name="post_index", requirements={"_method"="GET"})
      * @Template()
      */
     public function indexAction()
@@ -35,7 +35,7 @@ class PostAdminController extends BaseController
     }
 
     /**
-     * @Route("/{id}", name="post_show", requirements={"_method"="GET", "id" = "\d+"})
+     * @Route("/{id}/", name="post_show", requirements={"_method"="GET", "id" = "\d+"})
      * @ParamConverter("id", class="PhoshMainBundle:Post")
      * @Template()
      */
@@ -47,7 +47,7 @@ class PostAdminController extends BaseController
     }
 
     /**
-     * @Route("/create", name="post_create")
+     * @Route("/create/", name="post_create")
      * @Template()
      */
     public function createAction()
@@ -86,7 +86,7 @@ class PostAdminController extends BaseController
     }
 
     /**
-     * @Route("/{id}/edit", name="post_edit", requirements={"id" = "\d+"})
+     * @Route("/{id}/edit/", name="post_edit", requirements={"id" = "\d+"})
      * @ParamConverter("id", class="PhoshMainBundle:Post")
      * @Template()
      */
@@ -117,7 +117,7 @@ class PostAdminController extends BaseController
     }
 
     /**
-     * @Route("/{id}/delete", name="post_delete", requirements={"id" = "\d+"})
+     * @Route("/{id}/delete/", name="post_delete", requirements={"id" = "\d+"})
      * @ParamConverter("id", class="PhoshMainBundle:Post")
      */
     public function deleteAction(Post $post)
@@ -141,6 +141,10 @@ class PostAdminController extends BaseController
      */
     public function productAddAction($id, $productId)
     {
+        if ($this->getRequest()->getRequestFormat() == 'html') {
+            return $this->forward('PhoshMainBundle:PostAdmin:show', array('id' => $id));
+        }
+
         $product = $this->findProduct($productId);
         $this->assertNotNull($product);
 
@@ -177,6 +181,10 @@ class PostAdminController extends BaseController
      */
     public function productRemoveAction($id, $productId)
     {
+        if ($this->getRequest()->getRequestFormat() == 'html') {
+            return $this->forward('PhoshMainBundle:PostAdmin:show', array('id' => $id));
+        }
+
         $product = $this->findProduct($productId);
         $this->assertNotNull($product);
 
