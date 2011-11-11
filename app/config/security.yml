@@ -31,7 +31,7 @@ security:
         target: /login
       remember_me:
         key:  iadkfia~!~304-0ieefdsgdsg%%(@_(!@(13ddaadsdsaads;kwd!@@$!?093808903212dd
-        lifetime: 86400 # in seconds - 24 hours
+        lifetime: 604800 # 86400 * 7 in seconds - 24 hours
 
   access_control:
     - { path: ^/admin/, roles: ROLE_ADMIN }
