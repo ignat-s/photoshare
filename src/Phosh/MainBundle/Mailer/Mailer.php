@@ -34,7 +34,7 @@ class Mailer
         $orderCreatedToEmail = $this->findConfigAttrValueByName('orderCreatedToEmail');
 
         if ($orderCreatedFromEmail && $orderCreatedToEmail) {
-            $this->sendEmailMessage($rendered, $orderCreatedFromEmail->getValue(), $orderCreatedToEmail->getValue());
+            $this->sendEmailMessage($rendered, $orderCreatedFromEmail, $orderCreatedToEmail);
         }
     }
 

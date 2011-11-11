@@ -1,5 +1,5 @@
 {% autoescape false %}
-New order created
+New order №{{ order.number }} created
 New order created {{ order.createdAt|date("Y/m/d") }} at {{ order.createdAt|date("H:i:s") }}.
 
 Order number: {{ order.number }}
